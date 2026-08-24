@@ -97,7 +97,9 @@ h3 { font-size: 1.45rem; font-weight: 600; }
 .project-card { display: grid; gap: 1.5rem; padding: 1.2rem; border: 1px solid var(--border); background: var(--surface); }
 .project-card:first-child { grid-row: span 2; }
 .project-card.coming-soon { background: var(--surface-alt); }
-.project-visual { display: grid; min-height: 13rem; place-items: center; background: var(--surface-alt); border: 1px solid var(--border); }
+.project-visual { display: grid; min-height: 13rem; place-items: center; overflow: hidden; background: var(--surface-alt); border: 1px solid var(--border); }
+.project-visual.project-preview { aspect-ratio: 16 / 9; min-height: 0; }
+.project-preview img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: top; }
 .project-visual span { color: var(--link); font-size: 3rem; }
 .project-card h3 { margin: .5rem 0 .7rem; font-size: 1.7rem; }
 .tags { display: flex; flex-wrap: wrap; gap: .45rem; margin: 1.3rem 0; padding: 0; list-style: none; }
