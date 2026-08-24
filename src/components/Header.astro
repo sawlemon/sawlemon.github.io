@@ -1,0 +1,35 @@
+---
+import { site } from '../data/site';
+---
+
+<header class="site-header">
+  <nav class="nav wrap" aria-label="Main navigation">
+    <a class="wordmark" href="/">{site.handle}</a>
+    <div class="nav-links">
+      <a href="/#about">About</a>
+      <a href="/#interests">Interests</a>
+      <a href="/#projects">Projects</a>
+      <a href="/blog/">Writing</a>
+      <a href="/#experience">Experience</a>
+      <a href="/#connect">Connect</a>
+    </div>
+    <div class="nav-actions">
+      <button class="theme-toggle" type="button" data-theme-toggle aria-label="Toggle colour theme" aria-pressed="true">
+        <span aria-hidden="true">◐</span><span class="sr-only">Toggle colour theme</span>
+      </button>
+      <a class="button button-secondary" href={site.github} target="_blank" rel="noreferrer">View GitHub <span aria-hidden="true">↗</span></a>
+      <details class="mobile-menu">
+        <summary>Menu</summary>
+        <div>
+          <a href="/#about">About</a>
+          <a href="/#interests">Interests</a>
+          <a href="/#projects">Projects</a>
+          <a href="/blog/">Writing</a>
+          <a href="/#experience">Experience</a>
+          <a href="/#connect">Connect</a>
+          <a href={site.github} target="_blank" rel="noreferrer">View GitHub ↗</a>
+        </div>
+      </details>
+    </div>
+  </nav>
+</header>

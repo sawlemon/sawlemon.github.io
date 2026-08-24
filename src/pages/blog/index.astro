@@ -1,0 +1,11 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+import { getCollection } from 'astro:content';
+import { site } from '../../data/site';
+
+const posts = (await getCollection('blog', ({ data }) => !data.draft)).sort((a, b) => b.data.publishedDate.getTime() - a.data.publishedDate.getTime());
+---
+
+<BaseLayout title={`Writing | ${site.name}`} description="Articles and technical notes by Solomon Raj A."><Header /><main id="main" class="wrap blog-page"><p class="eyebrow">WRITING</p><h1>Notes and articles.</h1>{posts.length ? <div class="post-list">{posts.map((post) => <article><p class="eyebrow">{post.data.publishedDate.toLocaleDateString('en', { month: 'long', year: 'numeric' })}</p><h2><a href={`/blog/${post.id}/`}>{post.data.title}</a></h2><p>{post.data.description}</p></article>)}</div> : <div class="empty-state"><h2>Writing is coming soon.</h2><p>Future articles will be added as Markdown files in this repository.</p><a class="text-link" href="/">Back to portfolio</a></div>}</main><Footer /></BaseLayout>
