@@ -12,19 +12,19 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft)).sort((a, 
   <Header />
   <main id="main" class="wrap main-grid">
     <section class="hero" aria-labelledby="hero-title">
-      <div>
-        <p class="eyebrow">SOLOMON RAJ A / CYBERSECURITY</p>
-        <h1 id="hero-title">Security,<br />cloud, and<br />AI systems.</h1>
-        <p class="hero-copy">I’m a Senior Consultant in Cybersecurity at Presidio, specializing in SIEM implementations and endpoint security. My background includes five years across cybersecurity and cloud engineering.</p>
-        <div class="actions"><a class="button button-primary" href="#projects">Explore my work</a><a class="text-link" href="#connect">Connect with me <span aria-hidden="true">→</span></a></div>
-      </div>
-      <div class="hero-profile">
-        <div class="portrait" role="img" aria-label="Abstract placeholder portrait made from a security signal grid"><span>SR</span></div>
-        <dl class="hero-facts"><div><dt>Location</dt><dd>Coimbatore, India</dd></div><div><dt>Experience</dt><dd>5+ years</dd></div></dl>
-      </div>
+      <p class="eyebrow">Cybersecurity / Cloud / AI</p>
+      <h1 id="hero-title" class="hero-name">
+        <span class="sr-only">Solomon Raj</span>
+        <svg viewBox="0 0 700 120" aria-hidden="true" focusable="false">
+          <text x="2" y="98" textLength="696" lengthAdjust="spacingAndGlyphs">Solomon Raj</text>
+        </svg>
+      </h1>
+      <p class="hero-role">Senior Consultant, Cybersecurity @ Presidio</p>
+      <div class="actions"><a class="button button-primary" href="#projects">Explore my work</a><a class="text-link" href="#connect">Connect with me <span aria-hidden="true">→</span></a></div>
+      <dl class="hero-facts"><div><dt>Location</dt><dd>Coimbatore, India</dd></div><div><dt>Experience</dt><dd>5+ years</dd></div></dl>
     </section>
 
-    <section id="about" class="section about"><p class="section-label">01 / ABOUT</p><div><h2>I like making complex systems easier to understand, secure, and explain.</h2><div class="two-column"><p>Solomon progressed from Cloud Engineer Trainee to Senior Consultant at Presidio, completed an MTech in Cloud Computing at BITS Pilani and a BE in Computer Science and Engineering at KGiSL Institute of Technology, and participates in mentoring, public speaking, technical communities, and knowledge sharing.</p><ul class="facts-list"><li>Cybersecurity</li><li>Cloud engineering</li><li>AI security</li><li>Community</li></ul></div></div></section>
+    <section id="about" class="section about"><p class="section-label">01 / ABOUT</p><div><h2>I like making complex systems easier to understand, secure, and explain.</h2><p class="about-lead">I’m a Senior Consultant in Cybersecurity at Presidio, specializing in SIEM implementations and endpoint security. My background includes five years across cybersecurity and cloud engineering.</p><div class="two-column"><p>Solomon progressed from Cloud Engineer Trainee to Senior Consultant at Presidio, completed an MTech in Cloud Computing at BITS Pilani and a BE in Computer Science and Engineering at KGiSL Institute of Technology, and participates in mentoring, public speaking, technical communities, and knowledge sharing.</p><ul class="facts-list"><li>Cybersecurity</li><li>Cloud engineering</li><li>AI security</li><li>Community</li></ul></div></div></section>
 
     <section id="interests" class="section"><p class="section-label">02 / INTERESTS</p><div class="interest-grid">{interests.map(([title, description], index) => <article><span>{String(index + 1).padStart(2, '0')}</span><h3>{title}</h3><p>{description}</p></article>)}</div></section>
 
