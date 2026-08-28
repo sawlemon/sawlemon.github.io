@@ -221,6 +221,25 @@ h3 { font-size: 1.45rem; font-weight: 600; }
   .top-grid { grid-template-columns: 1fr; }
   .bar-minutes { display: none; }
 }
-.music-teaser { margin-top: 1.6rem; color: var(--muted); font-size: .9rem; }
-.music-teaser a { color: var(--muted); text-decoration: underline; text-underline-offset: 3px; }
-.music-teaser a:hover, .music-teaser a:focus-visible { color: var(--link); }
+.music-gem { display: flex; justify-content: center; margin-top: 4rem; }
+.music-gem-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border: 1px solid var(--border);
+  border-radius: 0;
+  background: transparent;
+  color: var(--meta);
+  opacity: .6;
+  transition: color .3s ease, border-color .3s ease, opacity .3s ease;
+}
+.music-gem-button svg { width: 20px; height: 20px; fill: currentColor; }
+.music-gem-button:hover,
+.music-gem-button:focus-visible {
+  opacity: 1;
+  color: var(--link);
+  border-color: var(--link);
+  outline: none;
+}
