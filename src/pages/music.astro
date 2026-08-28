@@ -1,0 +1,169 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import music from '../data/music.json';
+
+const years = Object.keys(music.years).sort().reverse();
+const latest = years[0];
+
+const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
+const fmt = (n: number) => n.toLocaleString('en-IN');
+const embedUrl = (playlist: { id: string; url: string }) => {
+  const slug = playlist.url.split('/playlist/')[1]?.split('/')[0] ?? '';
+  return `https://embed.music.apple.com/in/playlist/${slug}/${playlist.id}?theme=auto`;
+};
+---
+
+<BaseLayout title="Music | Solomon Raj A" description="My Apple Music Replay listening stats — top songs, artists, and minutes per month for 2025 and 2026.">
+  <Header />
+  <main id="main" class="wrap music-page">
+    <section class="hero" aria-labelledby="music-title">
+      <p class="eyebrow">Apple Music Replay</p>
+      <h1 id="music-title">Music</h1>
+      <p class="hero-role">
+        Everything I’ve played since Replay started tracking — {fmt(music.years['2025'].minutes + music.years['2026'].minutes)} minutes
+        across 2025 and 2026.
+      </p>
+      <div class="year-switch" role="tablist" aria-label="Replay year">
+        {years.map((year) => (
+          <button type="button" role="tab" id={`year-tab-${year}`} class="year-button"
+            aria-selected={year === latest ? 'true' : 'false'} aria-controls={`year-panel-${year}`}
+            data-year={year}>{year}</button>
+        ))}
+      </div>
+    </section>
+
+    {years.map((year) => {
+      const data = music.years[year];
+      const maxMinutes = Math.max(...data.months.map((m) => m.minutes), 1);
+      const monthsByNum = Object.fromEntries(data.months.map((m) => [m.month, m]));
+      const topSong = data.topSongs[0];
+      const topArtist = data.topArtists[0];
+      return (
+        <div id={`year-panel-${year}`} role="tabpanel" aria-labelledby={`year-tab-${year}`}
+          class:list={['year-panel', { 'is-hidden': year !== latest }]} data-year-panel={year}>
+          <section class="section" aria-label={`${year} overview`}>
+            <p class="section-label">{year} / OVERVIEW</p>
+            <div>
+              <div class="stat-row">
+                <article class="stat-card">
+                  <p class="stat-value">{fmt(data.minutes)}</p>
+                  <p class="stat-label">minutes listened</p>
+                </article>
+                <article class="stat-card">
+                  <p class="stat-value">{topArtist.name}</p>
+                  <p class="stat-label">top artist · {fmt(topArtist.minutes)} min</p>
+                </article>
+                <article class="stat-card">
+                  <p class="stat-value">{topSong.title}</p>
+                  <p class="stat-label">top song · {topSong.plays} plays</p>
+                </article>
+              </div>
+
+              <h3 class="sub-heading">Monthly listening</h3>
+              <ul class="month-chart" aria-label={`Minutes listened per month in ${year}`}>
+                {monthNames.map((label, index) => {
+                  const month = monthsByNum[index + 1];
+                  const height = month ? Math.round((month.minutes / maxMinutes) * 100) : 0;
+                  return (
+                    <li class:list={['month-bar', { empty: !month }]}>
+                      <div class="bar-track">
+                        <div class="bar-fill" style={`height:${month ? Math.max(height, 4) : 0}%`}
+                          title={month ? `${label} ${year}: ${fmt(month.minutes)} minutes` : `${label} ${year}: no data`} />
+                      </div>
+                      <span class="bar-minutes">{month ? fmt(month.minutes) : '—'}</span>
+                      <span class="bar-label">{label}</span>
+                    </li>
+                  );
+                })}
+              </ul>
+              <p class="chart-note">Minutes per month{year === '2026' ? ' · August is still in progress' : ''}{data.months.length < 12 ? ' · gaps mean no listening data' : ''}.</p>
+            </div>
+          </section>
+
+          <section class="section" aria-label={`${year} top artists and songs`}>
+            <p class="section-label">{year} / TOP ARTISTS &amp; SONGS</p>
+            <div class="top-grid">
+              <div>
+                <h3 class="sub-heading">Top artists</h3>
+                <ol class="ranked-list">
+                  {data.topArtists.slice(0, 10).map((artist, i) => (
+                    <li>
+                      <span class="rank">{String(i + 1).padStart(2, '0')}</span>
+                      <span class="rank-main">{artist.name}</span>
+                      <span class="rank-meta">{fmt(artist.minutes)} min · {artist.plays} plays</span>
+                    </li>
+                  ))}
+                </ol>
+              </div>
+              <div>
+                <h3 class="sub-heading">Top songs</h3>
+                <ol class="ranked-list song-list">
+                  {data.topSongs.slice(0, 10).map((song, i) => (
+                    <li>
+                      <span class="rank">{String(i + 1).padStart(2, '0')}</span>
+                      <img class="song-art" src={song.artwork ?? ''} alt="" width="56" height="56" loading="lazy" />
+                      <span class="rank-main">
+                        {song.title}
+                        <small>{song.artist}</small>
+                      </span>
+                      <span class="rank-meta">{song.plays} plays</span>
+                    </li>
+                  ))}
+                </ol>
+              </div>
+            </div>
+          </section>
+
+          {data.playlist && (
+            <section class="section" aria-label={`${data.playlist.name} playlist`}>
+              <p class="section-label">{year} / PLAYLIST</p>
+              <div>
+                <h3 class="sub-heading">{data.playlist.name}</h3>
+                {year === '2025' ? (
+                  <>
+                    <p class="playlist-note">The playlist Apple generated from my {year} listening:</p>
+                    <div class="playlist-embed">
+                      <iframe allow="autoplay *; encrypted-media *; fullscreen *; picture-in-picture *"
+                        frameborder="0" height="450" loading="lazy"
+                        src={embedUrl(data.playlist)}
+                        title={`${data.playlist.name} playlist player`} />
+                    </div>
+                  </>
+                ) : (
+                  <p class="playlist-note">
+                    The {year} playlist is still growing — Apple enables embedding once the year wraps up.
+                    <a class="text-link" href={data.playlist.url} target="_blank" rel="noreferrer">
+                      Open Replay {year} in Apple Music <span aria-hidden="true">↗</span>
+                    </a>
+                  </p>
+                )}
+                {year === '2025' && (
+                  <a class="text-link" href={data.playlist.url} target="_blank" rel="noreferrer">
+                    Open in Apple Music <span aria-hidden="true">↗</span>
+                  </a>
+                )}
+              </div>
+            </section>
+          )}
+        </div>
+      );
+    })}
+  </main>
+  <Footer />
+  <script is:inline>
+    (() => {
+      const tabs = document.querySelectorAll('.year-button');
+      const panels = document.querySelectorAll('[data-year-panel]');
+      tabs.forEach((tab) => {
+        tab.addEventListener('click', () => {
+          const year = tab.getAttribute('data-year');
+          tabs.forEach((t) => t.setAttribute('aria-selected', String(t === tab)));
+          panels.forEach((p) => p.classList.toggle('is-hidden', p.getAttribute('data-year-panel') !== year));
+        });
+      });
+    })();
+  </script>
+</BaseLayout>
