@@ -1,0 +1,10 @@
+{
+  "name": "refresh-music",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "One-shot tool: extract Apple Music tokens from a logged-in browser, fetch Replay data, regenerate src/data/music.json.",
+  "dependencies": {
+    "playwright": "^1.49.0"
+  }
+}

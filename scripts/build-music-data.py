@@ -1,10 +1,15 @@
 #!/usr/bin/env python3
-"""Parse Apple Music Replay API summaries (/tmp/replay) into src/data/music.json."""
+"""Parse Apple Music Replay API summaries (/tmp/replay) into src/data/music.json.
+
+Input files: year-YYYY.json and month-YYYY-MM.json fetched by scripts/refresh-music/.
+"""
 import json
 import glob
 import os
+import re
+from datetime import date
 
-REPLAY_DIR = "/tmp/replay"
+REPLAY_DIR = os.environ.get("REPLAY_DIR", "/tmp/replay")
 OUT = os.path.join(os.path.dirname(__file__), "..", "src", "data", "music.json")
 
 MONTH_LABELS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
@@ -59,8 +64,14 @@ def album_attrs(res, summary):
 
 def build():
     years = {}
-    for year in ("2025", "2026"):
-        yd = json.load(open(os.path.join(REPLAY_DIR, f"year-{year}.json")))
+    for path in sorted(glob.glob(os.path.join(REPLAY_DIR, "year-*.json"))):
+        m = re.search(r"year-(\d{4})\.json$", path)
+        if not m:
+            continue
+        year = m.group(1)
+        yd = json.load(open(path))
+        if not yd.get("data"):
+            continue  # 404 body: no replay data for this year
         res = yd["resources"]
 
         songs = []
@@ -128,7 +139,9 @@ def build():
             "playlist": playlist,
         }
 
-    out = {"generated": "2026-08-28", "years": years}
+    if not years:
+        raise SystemExit(f"no usable year-*.json files found in {REPLAY_DIR} — run scripts/refresh-music/ first")
+    out = {"generated": date.today().isoformat(), "years": years}
     with open(OUT, "w") as f:
         json.dump(out, f, indent=1, ensure_ascii=False)
     print("wrote", OUT)
