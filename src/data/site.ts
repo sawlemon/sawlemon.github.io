@@ -2,6 +2,12 @@ export type Project = {
   title: string;
   description: string;
   tags: string[];
+  preview?: {
+    src: string;
+    alt: string;
+    width: number;
+    height: number;
+  };
   href?: string;
   sourceHref?: string;
   status?: 'coming-soon';
@@ -34,6 +40,12 @@ export const projects: Project[] = [
     title: 'LLM Report Card',
     description: 'An evidence-based dashboard for comparing AI models across practical strengths, limitations, and observed behavior.',
     tags: ['AI evaluation', 'React', 'GitHub Pages'],
+    preview: {
+      src: '/images/llm-report-card-preview.jpg',
+      alt: 'LLM Report Card dashboard showing the provider index, model filters, and Anthropic model cards',
+      width: 1265,
+      height: 712
+    },
     href: 'https://sawlemon.github.io/llm-reportcard/',
     sourceHref: 'https://github.com/sawlemon/llm-reportcard'
   },
