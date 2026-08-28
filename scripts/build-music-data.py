@@ -125,10 +125,14 @@ def build():
             })
         months.sort(key=lambda m: m["month"])
 
+        playlists = list(res.get("playlists", {}).values())
+        replay_playlists = [p for p in playlists if str(p.get("id", "")).startswith("pl.rp-")]
+        pick = next((p for p in replay_playlists if p.get("attributes", {}).get("name") == f"Replay {year}"),
+                    replay_playlists[0] if replay_playlists else (playlists[0] if playlists else None))
         playlist = None
-        for p in res.get("playlists", {}).values():
-            a = p.get("attributes", {})
-            playlist = {"name": a.get("name"), "url": a.get("url"), "id": p.get("id")}
+        if pick:
+            a = pick.get("attributes", {})
+            playlist = {"name": a.get("name"), "url": a.get("url"), "id": pick.get("id")}
 
         years[year] = {
             "minutes": sum(m["minutes"] for m in months),
