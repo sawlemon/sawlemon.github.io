@@ -63,15 +63,15 @@ h3 { font-size: 1.45rem; font-weight: 600; }
 .main-grid { display: grid; gap: 8rem; padding-block: 6rem 8rem; }
 .hero { display: grid; grid-template-columns: minmax(0, 1fr); align-content: center; text-align: center; padding-block: clamp(3rem, 10vh, 5.5rem) clamp(3rem, 12vh, 6rem); }
 .eyebrow, .section-label { font-family: 'JetBrains Mono', monospace; color: var(--meta); font-size: .8rem; font-weight: 500; letter-spacing: .1em; text-transform: uppercase; }
-.hero .eyebrow { margin-bottom: 1.4rem; }
-.hero-name { margin: 0 0 1.1rem; }
+.hero .eyebrow { margin-bottom: 1.1rem; }
+.hero-name { margin: 0 0 1rem; }
 .hero-name svg { display: block; width: min(100%, 32rem); height: auto; overflow: visible; margin-inline: auto; }
 .hero-name text { font-family: 'Bodoni Moda Variable', 'Bodoni Moda', serif; font-size: 100px; font-weight: 600; letter-spacing: -.02em; fill: transparent; stroke: var(--text); stroke-width: .7; stroke-dasharray: 800; stroke-dashoffset: 800; animation: name-draw 2.6s cubic-bezier(.6, 0, .3, 1) forwards, name-fill .9s ease 1.9s forwards; }
-.hero-name svg.hero-name-stack text { font-size: 165px; }
+.hero-name svg.hero-name-stack text { font-size: 126px; }
 @keyframes name-draw { to { stroke-dashoffset: 0; } }
 @keyframes name-fill { to { fill: var(--text); } }
 .hero-name svg.hero-name-stack { display: none; }
-.hero-role { margin: 0 0 2.2rem; color: var(--link); font-family: 'Space Grotesk Variable', 'Space Grotesk', sans-serif; font-size: clamp(1.35rem, 2.4vw, 1.8rem); font-weight: 600; letter-spacing: -.02em; }
+.hero-role { text-wrap: balance; margin: 0 0 2rem; color: var(--link); font-family: 'Space Grotesk Variable', 'Space Grotesk', sans-serif; font-size: clamp(1.1rem, 2.4vw, 1.8rem); font-weight: 600; letter-spacing: -.02em; }
 .actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 1.5rem; align-items: center; }
 .text-link { color: var(--link); font-weight: 700; text-underline-offset: .28em; }
 .text-link:hover { color: var(--link-hover); }
@@ -159,7 +159,8 @@ h3 { font-size: 1.45rem; font-weight: 600; }
   .button-secondary { display: none; }
   .mobile-menu { display: block; }
   .main-grid { gap: 5rem; padding-block: 3rem 5rem; }
-  .hero { padding-block: 0; }
+  .hero { padding-block: 1.5rem 0; }
+  .hero-facts { margin-top: 1.6rem; }
   .hero-name svg.hero-name-line { display: none; }
   .hero-name svg.hero-name-stack { display: block; width: 100%; }
   .about-lead { font-size: 1.1rem; }
