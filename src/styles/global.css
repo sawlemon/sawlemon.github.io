@@ -214,3 +214,6 @@ h3 { font-size: 1.45rem; font-weight: 600; }
   .top-grid { grid-template-columns: 1fr; }
   .bar-minutes { display: none; }
 }
+.music-teaser { margin-top: 1.6rem; color: var(--muted); font-size: .9rem; }
+.music-teaser a { color: var(--muted); text-decoration: underline; text-underline-offset: 3px; }
+.music-teaser a:hover, .music-teaser a:focus-visible { color: var(--link); }

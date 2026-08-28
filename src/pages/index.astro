@@ -15,8 +15,12 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft)).sort((a, 
       <p class="eyebrow">Cybersecurity / Cloud / AI</p>
       <h1 id="hero-title" class="hero-name">
         <span class="sr-only">Solomon Raj</span>
-        <svg viewBox="0 0 700 120" aria-hidden="true" focusable="false">
+        <svg class="hero-name-line" viewBox="0 0 700 120" aria-hidden="true" focusable="false">
           <text x="2" y="98" textLength="696" lengthAdjust="spacingAndGlyphs">Solomon Raj</text>
+        </svg>
+        <svg class="hero-name-stack" viewBox="0 0 700 300" aria-hidden="true" focusable="false">
+          <text x="350" y="115" text-anchor="middle">Solomon</text>
+          <text x="350" y="265" text-anchor="middle">Raj</text>
         </svg>
       </h1>
       <p class="hero-role">Senior Consultant, Cybersecurity @ Presidio</p>
@@ -36,7 +40,7 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft)).sort((a, 
 
     <section class="section"><p class="section-label">06 / CREDENTIALS</p><div class="credential-grid">{credentials.map(([name, note]) => <article><span>{name}</span>{note && <small class:list={{ latest: note === 'Latest' }}>{note}</small>}</article>)}</div><a class="text-link" href={site.linkedin} target="_blank" rel="noreferrer">View complete credentials on LinkedIn ↗</a></section>
 
-    <section id="connect" class="connect-section"><p class="section-label">07 / CONNECT</p><h2>I’m always interested in thoughtful security work, AI experiments, and conversations with people who enjoy building and sharing.</h2><div class="contact-list"><a href={site.linkedin} target="_blank" rel="noreferrer">LinkedIn <span>↗</span></a><a href={site.github} target="_blank" rel="noreferrer">GitHub <span>↗</span></a><span aria-disabled="true">YouTube <small>Coming soon</small></span><span aria-disabled="true">Email <small>Coming soon</small></span></div></section>
+    <section id="connect" class="connect-section"><p class="section-label">07 / CONNECT</p><h2>I’m always interested in thoughtful security work, AI experiments, and conversations with people who enjoy building and sharing.</h2><div class="contact-list"><a href={site.linkedin} target="_blank" rel="noreferrer">LinkedIn <span>↗</span></a><a href={site.github} target="_blank" rel="noreferrer">GitHub <span>↗</span></a><span aria-disabled="true">YouTube <small>Coming soon</small></span><span aria-disabled="true">Email <small>Coming soon</small></span></div><p class="music-teaser">P.S. — if you’ve read this far, <a href="/music/">here’s what I’ve been listening to</a>.</p></section>
   </main>
   <Footer />
 </BaseLayout>
