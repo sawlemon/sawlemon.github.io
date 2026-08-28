@@ -66,6 +66,8 @@ h3 { font-size: 1.45rem; font-weight: 600; }
 .hero .eyebrow { margin-bottom: 1.4rem; }
 .hero-name { margin: 0 0 1.1rem; }
 .hero-name svg { display: block; width: min(100%, 32rem); height: auto; overflow: visible; margin-inline: auto; }
+.hero-name svg.hero-name-stack { display: none; }
+.hero-name-stack text { font-size: 240px; }
 .hero-name text { font-family: 'Bodoni Moda Variable', 'Bodoni Moda', serif; font-size: 100px; font-weight: 600; letter-spacing: -.02em; fill: transparent; stroke: var(--text); stroke-width: .7; stroke-dasharray: 800; stroke-dashoffset: 800; animation: name-draw 2.6s cubic-bezier(.6, 0, .3, 1) forwards, name-fill .9s ease 1.9s forwards; }
 @keyframes name-draw { to { stroke-dashoffset: 0; } }
 @keyframes name-fill { to { fill: var(--text); } }
@@ -158,6 +160,8 @@ h3 { font-size: 1.45rem; font-weight: 600; }
   .mobile-menu { display: block; }
   .main-grid { gap: 5rem; padding-block: 3rem 5rem; }
   .hero { padding-block: 0; }
+  .hero-name svg.hero-name-line { display: none; }
+  .hero-name svg.hero-name-stack { display: block; width: 100%; }
   .about-lead { font-size: 1.1rem; }
   .section { grid-template-columns: 1fr; gap: 1.5rem; padding-top: 3.5rem; }
   .two-column, .project-grid { grid-template-columns: 1fr; gap: 1rem; }
