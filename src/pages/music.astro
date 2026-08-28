@@ -36,7 +36,7 @@ const embedUrl = (playlist: { id: string; url: string }) => {
     </section>
 
     {years.map((year) => {
-      const data = music.years[year];
+      const data = music.years[year as keyof typeof music.years];
       const maxMinutes = Math.max(...data.months.map((m) => m.minutes), 1);
       const monthsByNum = Object.fromEntries(data.months.map((m) => [m.month, m]));
       const topSong = data.topSongs[0];
