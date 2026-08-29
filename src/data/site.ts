@@ -10,7 +10,6 @@ export type Project = {
   };
   href?: string;
   sourceHref?: string;
-  status?: 'coming-soon';
 };
 
 export const site = {
@@ -65,28 +64,34 @@ export const interestGroups = [
 export const projects: Project[] = [
   {
     title: 'LLM Report Card',
-    description: 'An evidence-based dashboard for comparing AI models across practical strengths, limitations, and observed behavior.',
-    tags: ['AI evaluation', 'React', 'GitHub Pages'],
+    description: 'A Markdown-driven report card of first-hand observations on LLM models and harnesses — not benchmarks. One Markdown file is the source of truth; the site validates it at build time and renders filterable model and harness views.',
+    tags: ['LLM evaluation', 'React', 'Vite', 'GitHub Pages'],
     preview: {
       src: '/images/llm-report-card-preview.jpg',
-      alt: 'LLM Report Card dashboard showing the provider index, model filters, and Anthropic model cards',
-      width: 1265,
-      height: 712
+      alt: 'LLM Report Card dashboard showing the provider index, search and aspect filters, and model report cards',
+      width: 2880,
+      height: 1620
     },
     href: 'https://sawlemon.github.io/llm-reportcard/',
     sourceHref: 'https://github.com/sawlemon/llm-reportcard'
   },
   {
-    title: 'Next project',
-    description: 'A new project will appear here when it is ready to share.',
-    tags: ['Coming soon'],
-    status: 'coming-soon'
+    title: 'LLM Skills',
+    description: 'A library of reusable agent skills and prompt-improvement tooling for Claude Code, Codex, ZCode, and Cherry Studio — with evidence-gated learning extraction and review-before-apply workflows.',
+    tags: ['Prompt engineering', 'MCP', 'Node.js', 'Python'],
+    sourceHref: 'https://github.com/sawlemon/llm-skills'
   },
   {
-    title: 'More work',
-    description: 'More selected work is being prepared for this portfolio.',
-    tags: ['Coming soon'],
-    status: 'coming-soon'
+    title: 'ReadyMe',
+    description: 'A browser-only MCQ practice app that loads JSON question banks with Guided and Exam modes, instant answer feedback, and score review. One HTML file, zero dependencies.',
+    tags: ['Vanilla JavaScript', 'JSON', 'Browser app'],
+    preview: {
+      src: '/images/readyme-quiz.jpg',
+      alt: 'ReadyMe guided quiz showing a multiple-choice question with the wrong answer highlighted red, the correct answer green, and an explanation below',
+      width: 1400,
+      height: 1620
+    },
+    sourceHref: 'https://github.com/sawlemon/readyme'
   }
 ];
 
