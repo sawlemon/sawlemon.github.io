@@ -49,22 +49,26 @@ npm run preview
 | `npm run preview` | Serves the contents of `dist/` locally |
 | `npm run music:refresh -- --no-push` | Refreshes Replay data without committing or pushing |
 | `npm run music:refresh` | Refreshes Replay data, commits `src/data/music.json`, and pushes `main` |
+| `npm run books:build -- <csv>` | Converts a Goodreads library export CSV into `src/data/books.json` |
 
 ## Repository layout
 
 ```text
 .github/workflows/deploy.yml       GitHub Pages build and deploy workflow
 public/images/                     Static images copied into the build
+scripts/build-books-data.py        Converts a Goodreads library export CSV into site data
 scripts/build-music-data.py        Converts Replay API responses into site data
 scripts/refresh-music/             Browser-based Replay refresh tool
 src/components/                    Shared header and footer
 src/content/blog/                  Local and external writing entries
+src/data/books.json                Generated reading data from the Goodreads export
 src/data/music.json                Generated Apple Music Replay data
 src/data/site.ts                   Portfolio, project, experience, and credential data
 src/layouts/BaseLayout.astro       Shared document layout and metadata
 src/pages/index.astro              Portfolio homepage
 src/pages/blog/                    Writing index and local article routes
 src/pages/music.astro              Apple Music Replay page
+src/pages/books.astro              Books timeline page
 src/pages/rss.xml.ts               RSS feed
 src/styles/global.css              Site styles and theme tokens
 src/utils/blog.ts                  Local and external article link handling
@@ -174,6 +178,16 @@ npm run music:refresh -- --skip-fetch --no-push
 ```
 
 The persistent browser profile is stored under `scripts/refresh-music/.profile/` and ignored by Git. See [`scripts/refresh-music/README.md`](scripts/refresh-music/README.md) for script-specific notes.
+
+## Refresh the books data
+
+The books page reads [`src/data/books.json`](src/data/books.json). Do not hand-edit that file; regenerate it from a Goodreads library export CSV (My Books → Import/Export in Goodreads):
+
+```sh
+npm run books:build -- /path/to/goodreads_library_export.csv
+```
+
+The script keeps only books on the `read` and `currently-reading` shelves. Ratings, reviews, and private notes are never copied into the output. Dated reads are ordered newest first, reads without a completion date land in a separate undated group, and currently-reading books follow their Goodreads shelf order. Commit the regenerated `books.json`; keep the raw CSV outside the repository.
 
 ## Deployment
 
