@@ -22,17 +22,44 @@ export const site = {
   github: 'https://github.com/sawlemon'
 } as const;
 
-export const interests = [
-  ['Cybersecurity engineering', 'Practical security design and implementation.'],
-  ['SIEM implementation', 'Event visibility and security monitoring systems.'],
-  ['Endpoint security', 'Endpoint protection and operational security.'],
-  ['Security operations and detection', 'Detection engineering and investigation workflows.'],
-  ['Cloud security', 'Security across cloud platforms and services.'],
-  ['AI and LLM security', 'Security questions raised by AI systems.'],
-  ['Cloud and DevOps engineering', 'Cloud platforms and delivery practices.'],
-  ['Kubernetes and infrastructure as code', 'Modern infrastructure operations.'],
-  ['Open-source tools', 'Useful tools and community-led software.'],
-  ['Technical writing and community education', 'Sharing practical knowledge clearly.']
+export const interestGroups = [
+  {
+    title: 'Security Engineering',
+    accent: false,
+    columns: false,
+    topics: [
+      ['Detection engineering', 'Detection rules, lookups, and tuning on NG-SIEM platforms.'],
+      ['Security automation', 'SOAR workflows that turn alerts into automated response.'],
+      ['Vibe hacking', 'Hunting CTF flags with LLMs in the loop. Early days.']
+    ]
+  },
+  {
+    title: 'Cloud & Infrastructure',
+    accent: false,
+    columns: false,
+    topics: [
+      ['Cloud security', 'Security across cloud platforms and services.'],
+      ['Cloud and DevOps engineering', 'Cloud platforms and delivery practices.'],
+      ['Kubernetes and infrastructure as code', 'Modern infrastructure operations.']
+    ]
+  },
+  {
+    title: 'AI Security',
+    accent: true,
+    columns: false,
+    topics: [
+      ['AI and LLM security', 'LLM jailbreaking, adversarial ML, and the OWASP LLM Top 10.']
+    ]
+  },
+  {
+    title: 'Tools & Community',
+    accent: false,
+    columns: true,
+    topics: [
+      ['Open-source tools', 'Useful tools and community-led software.'],
+      ['Technical writing and community education', 'Sharing practical knowledge clearly.']
+    ]
+  }
 ] as const;
 
 export const projects: Project[] = [
