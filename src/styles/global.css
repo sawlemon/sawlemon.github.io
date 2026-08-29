@@ -143,6 +143,8 @@ h3 { font-size: 1.45rem; font-weight: 600; }
 .post-list h2, .post-list h3 { margin: .5rem 0; font-size: 1.8rem; }
 .post-list h2 a, .post-list h3 a { text-decoration-color: var(--link); text-underline-offset: .2em; }
 .post-list p { color: var(--muted); }
+.post-cover { display: block; overflow: hidden; margin-bottom: 1.4rem; background: var(--surface-alt); border: 1px solid var(--border); aspect-ratio: 16 / 9; }
+.post-cover img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: top; }
 .article .eyebrow { margin-top: 2.5rem; }
 .article-summary { max-width: 47rem; color: var(--muted); font-size: 1.25rem; }
 .source-note { padding: 1rem; border-left: 3px solid var(--accent); background: var(--surface-alt); color: var(--muted); }
