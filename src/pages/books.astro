@@ -1,0 +1,102 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import booksData from '../data/books.json';
+
+type Book = {
+  id: string;
+  title: string;
+  author: string;
+  status: string;
+  readDate: string | null;
+  dateAdded: string | null;
+  publishedYear: number | null;
+  pages: number | null;
+  format: string;
+  currentPosition: number | null;
+};
+
+const books = booksData.books as Book[];
+const reading = books.filter((book) => book.status === 'currently-reading');
+const datedReads = books.filter((book) => book.status === 'read' && book.readDate);
+const undatedReads = books.filter((book) => book.status === 'read' && !book.readDate);
+
+const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+const monthGroups = new Map<string, Book[]>();
+for (const book of datedReads) {
+  const key = book.readDate!.slice(0, 7);
+  if (!monthGroups.has(key)) monthGroups.set(key, []);
+  monthGroups.get(key)!.push(book);
+}
+const timeline = [...monthGroups.entries()].map(([key, items]) => {
+  const [year, month] = key.split('-');
+  return { label: `${MONTHS[Number(month) - 1]} ${year}`, items };
+});
+
+const bookMeta = (book: Book) =>
+  [book.pages ? `${book.pages} pages` : null, book.format].filter(Boolean).join(' · ');
+---
+
+<BaseLayout title="Books | Solomon Raj A" description="A timeline of the books I have read and what I am reading now. No ratings, no reviews, just the record.">
+  <Header />
+  <main id="main" class="wrap books-page">
+    <header class="hero">
+      <p class="eyebrow books-label"><span class="hobbies-marker" aria-hidden="true"></span>[ 09 / READING ]</p>
+      <h1>Books</h1>
+      <p class="books-lead">What I have read, newest first. No ratings, no reviews, just the record.</p>
+    </header>
+
+    <section class="section" aria-labelledby="reading-now-label">
+      <p class="section-label" id="reading-now-label">Currently reading</p>
+      <div class="reading-now-grid">
+        {reading.map((book) => (
+          <article class="book-card">
+            <h3>{book.title}</h3>
+            <p>{book.author}</p>
+            <span class="book-status">Now reading</span>
+          </article>
+        ))}
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="timeline-label">
+      <p class="section-label" id="timeline-label">Timeline</p>
+      <div class="book-timeline">
+        {timeline.map((group) => (
+          <div class="book-month">
+            <h2>{group.label}</h2>
+            <ul>
+              {group.items.map((book) => (
+                <li>
+                  <div>
+                    <h3>{book.title}</h3>
+                    <p class="book-author">{book.author}</p>
+                  </div>
+                  {bookMeta(book) && <span class="book-meta">{bookMeta(book)}</span>}
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))}
+      </div>
+    </section>
+
+    {undatedReads.length > 0 && (
+      <section class="section" aria-labelledby="undated-label">
+        <p class="section-label" id="undated-label">Read, date not recorded</p>
+        <ul class="book-undated">
+          {undatedReads.map((book) => (
+            <li>
+              <div>
+                <h3>{book.title}</h3>
+                <p class="book-author">{book.author}</p>
+              </div>
+            </li>
+          ))}
+        </ul>
+      </section>
+    )}
+  </main>
+  <Footer />
+</BaseLayout>

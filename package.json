@@ -8,7 +8,8 @@
     "build": "astro build",
     "preview": "astro preview",
     "check": "astro check",
-    "music:refresh": "node scripts/refresh-music/refresh.mjs"
+    "music:refresh": "node scripts/refresh-music/refresh.mjs",
+    "books:build": "python3 scripts/build-books-data.py"
   },
   "dependencies": {
     "@astrojs/rss": "^4.0.0",
