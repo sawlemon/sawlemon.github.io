@@ -11,6 +11,7 @@ Readers perform no network, browser, or secret handling: payloads are the
 plain JSON responses saved by the acquisition adapter.
 """
 import glob
+import hashlib
 import json
 import os
 import re
@@ -84,10 +85,25 @@ class ManifestReader:
         if not isinstance(manifest, dict) or not isinstance(manifest.get("snapshots"), list):
             raise RawInputError("manifest-invalid", "manifest.json has no snapshots list", manifest_path)
         self.manifest = manifest
+        # The validator is imported lazily to keep raw_io usable as a small
+        # standalone reader while enforcing the manifest contract here.
+        from validate import validate_raw_manifest
+        errors = validate_raw_manifest(manifest)
+        if errors:
+            raise RawInputError("manifest-invalid", f"manifest.json failed validation ({len(errors)} error(s))", manifest_path)
         self._present = {}
         for entry in manifest["snapshots"]:
             if not isinstance(entry, dict) or entry.get("status") != "present":
                 continue
+            payload_path = os.path.join(run_dir, entry["path"])
+            try:
+                with open(payload_path, "rb") as payload_file:
+                    payload_bytes = payload_file.read()
+            except OSError as e:
+                raise RawInputError("snapshot-missing", f"missing manifest payload: {entry['path']}", payload_path) from e
+            actual_hash = hashlib.sha256(payload_bytes).hexdigest()
+            if actual_hash != entry.get("payloadSha256"):
+                raise RawInputError("snapshot-hash", f"snapshot hash mismatch: {entry['path']}", payload_path)
             self._present.setdefault(entry.get("kind"), {})[entry.get("id")] = entry
 
     def year_ids(self):

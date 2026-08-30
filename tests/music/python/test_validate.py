@@ -138,6 +138,16 @@ class RawManifestTest(unittest.TestCase):
         manifest["schemaVersion"] = 2
         self.assertIn("manifest-version", codes(validate_raw_manifest(manifest)))
 
+    def test_wrong_source(self):
+        manifest = self.valid_manifest()
+        manifest["source"] = "other"
+        self.assertIn("manifest-source", codes(validate_raw_manifest(manifest)))
+
+    def test_duplicate_snapshot_rejected(self):
+        manifest = self.valid_manifest()
+        manifest["snapshots"].append(dict(manifest["snapshots"][0]))
+        self.assertIn("snapshot-duplicate", codes(validate_raw_manifest(manifest)))
+
     def test_path_traversal_rejected(self):
         manifest = self.valid_manifest()
         manifest["snapshots"][0]["path"] = "raw/../../etc/passwd"

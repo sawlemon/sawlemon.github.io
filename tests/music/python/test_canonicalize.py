@@ -104,11 +104,17 @@ class CanonicalizeTest(unittest.TestCase):
         self.assertIsNone(month_entry(None, 1))
 
     def test_missing_resources_year_is_error_diagnostic(self):
-        reader = FlatReader(os.path.join(FIXTURES, "malformed-only"))
-        os.makedirs(reader.input_dir, exist_ok=True)
-        with open(os.path.join(reader.input_dir, "year-2099.json"), "w", encoding="utf-8") as f:
+        import tempfile
+        input_dir = tempfile.mkdtemp(prefix="malformed-only-")
+        path = os.path.join(input_dir, "year-2099.json")
+        with open(path, "w", encoding="utf-8") as f:
             json.dump({"data": [{"id": "year-2099"}]}, f)
-        candidate, diagnostics = canonicalize(reader, date(2024, 1, 1))
+        try:
+            reader = FlatReader(input_dir)
+            candidate, diagnostics = canonicalize(reader, date(2024, 1, 1))
+        finally:
+            import shutil
+            shutil.rmtree(input_dir, ignore_errors=True)
         self.assertEqual(candidate["years"], {})
         self.assertTrue(any(d["code"] == "raw-missing-resources" and d["severity"] == "error" for d in diagnostics))
 
@@ -126,12 +132,24 @@ class ManifestReaderTest(unittest.TestCase):
         os.makedirs(os.path.join(run_dir, "raw"))
         for name in ("year-2024.json", "month-2024-01.json", "month-2024-02.json"):
             shutil.copy(os.path.join(RAW, name), os.path.join(run_dir, "raw", name))
-        entries = [
-            {"kind": "year", "id": "2024", "path": "raw/year-2024.json", "status": "present", "httpStatus": 200},
-            {"kind": "month", "id": "2024-01", "path": "raw/month-2024-01.json", "status": "present", "httpStatus": 200},
-            {"kind": "month", "id": "2024-02", "path": "raw/month-2024-02.json", "status": "present", "httpStatus": 200},
-            {"kind": "month", "id": "2024-03", "path": "raw/month-2024-03.json", "status": "absent", "httpStatus": 404},
-        ]
+        import hashlib
+        entries = []
+        for kind, ident, name in [
+            ("year", "2024", "year-2024.json"),
+            ("month", "2024-01", "month-2024-01.json"),
+            ("month", "2024-02", "month-2024-02.json"),
+        ]:
+            with open(os.path.join(run_dir, "raw", name), "rb") as payload_file:
+                payload = payload_file.read()
+            entries.append({
+                "kind": kind, "id": ident, "path": f"raw/{name}", "status": "present",
+                "httpStatus": 200, "observedAt": "2024-01-01T00:00:00Z",
+                "payloadSha256": hashlib.sha256(payload).hexdigest(),
+            })
+        entries.append({
+            "kind": "month", "id": "2024-03", "path": "raw/month-2024-03.json",
+            "status": "absent", "httpStatus": 404, "observedAt": "2024-01-01T00:00:00Z",
+        })
         manifest = {
             "schemaVersion": 1,
             "runId": "r1",

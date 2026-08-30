@@ -199,6 +199,8 @@ def validate_raw_manifest(manifest):
         return errors
     if manifest.get("schemaVersion") != 1:
         _error(errors, "manifest-version", ".schemaVersion", "schemaVersion must be 1")
+    if manifest.get("source") != "apple-music-replay":
+        _error(errors, "manifest-source", ".source", "source must be apple-music-replay")
     if not _is_nonempty_str(manifest.get("runId")):
         _error(errors, "manifest-run-id", ".runId", "runId must be a nonempty string")
     if not _is_nonempty_str(manifest.get("fetchedAt")):
@@ -207,6 +209,7 @@ def validate_raw_manifest(manifest):
     if not isinstance(snapshots, list) or not snapshots:
         _error(errors, "manifest-snapshots", ".snapshots", "snapshots must be a nonempty list")
         return errors
+    seen_ids = set()
     for i, entry in enumerate(snapshots):
         path = f".snapshots[{i}]"
         if not isinstance(entry, dict):
@@ -216,6 +219,11 @@ def validate_raw_manifest(manifest):
             _error(errors, "snapshot-kind", f"{path}.kind", "kind must be 'year' or 'month'")
         if not _is_nonempty_str(entry.get("id")):
             _error(errors, "snapshot-id", f"{path}.id", "id must be a nonempty string")
+        else:
+            key = (entry.get("kind"), entry.get("id"))
+            if key in seen_ids:
+                _error(errors, "snapshot-duplicate", path, "kind/id appears more than once")
+            seen_ids.add(key)
         rel = entry.get("path")
         if not _is_nonempty_str(rel) or not rel.startswith("raw/") or ".." in rel:
             _error(errors, "snapshot-path", f"{path}.path", "path must be a relative raw/ path without traversal")
