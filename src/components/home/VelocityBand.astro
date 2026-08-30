@@ -1,0 +1,34 @@
+---
+// Full-bleed scroll-velocity band between Interests and Selected Work.
+// Two rows, opposite directions. The first copy of each row is exposed to
+// assistive tech; the duplicate copy exists only for the seamless wrap loop.
+const primaryItems = ['SECURITY ENGINEERING', 'CLOUD ENGINEERING', 'AI SECURITY'];
+const secondaryItems = ['BUILDING', 'LEARNING', 'VIBE HACKING', 'SHARING'];
+---
+
+<section class="velocity-band" aria-label="Focus areas, building and sharing">
+  <div class="velocity-row primary" data-direction="-1">
+    {[0, 1].map((copy) => (
+      <div class="velocity-copy" aria-hidden={copy === 1 ? 'true' : undefined}>
+        {primaryItems.map((item) => (
+          <>
+            <span>{item}</span>
+            <span class="dot" aria-hidden="true">·</span>
+          </>
+        ))}
+      </div>
+    ))}
+  </div>
+  <div class="velocity-row secondary" data-direction="1">
+    {[0, 1].map((copy) => (
+      <div class="velocity-copy" aria-hidden={copy === 1 ? 'true' : undefined}>
+        {secondaryItems.map((item) => (
+          <>
+            <span>{item}</span>
+            <span aria-hidden="true">·</span>
+          </>
+        ))}
+      </div>
+    ))}
+  </div>
+</section>
