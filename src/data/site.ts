@@ -17,6 +17,7 @@ export const site = {
   handle: 'SAWLEMON',
   url: 'https://sawlemon.github.io',
   description: 'Personal portfolio of Solomon Raj A, a Senior Consultant in Cybersecurity at Presidio.',
+  role: 'Senior Consultant, Cybersecurity at Presidio',
   linkedin: 'https://www.linkedin.com/in/solomonraja/',
   github: 'https://github.com/sawlemon'
 } as const;

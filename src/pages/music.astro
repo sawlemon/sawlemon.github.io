@@ -2,6 +2,7 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
+import { site } from '../data/site';
 import music from '../data/music.json';
 
 const years = Object.keys(music.years).sort().reverse();
@@ -28,6 +29,7 @@ const embedUrl = (playlist: { id: string; url: string }) => {
     <section class="hero page-reveal" aria-labelledby="music-title">
       <p class="eyebrow">Apple Music Replay</p>
       <h1 id="music-title">Music</h1>
+      <p class="subpage-role">{site.role}</p>
       <p class="hero-role">
         Everything I’ve played since Replay started tracking — {fmt(totalMinutes)} minutes
         across {yearRange}.

@@ -2,6 +2,7 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
+import { site } from '../data/site';
 import booksData from '../data/books.json';
 
 type Book = {
@@ -44,6 +45,7 @@ const bookMeta = (book: Book) =>
     <header class="hero page-reveal">
       <p class="eyebrow books-label"><span class="hobbies-marker" aria-hidden="true"></span>[ 09 / READING ]</p>
       <h1>Books</h1>
+      <p class="subpage-role">{site.role}</p>
       <p class="books-lead">What I have read, newest first. No ratings, no reviews, just the record.</p>
     </header>
 
