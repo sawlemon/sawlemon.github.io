@@ -104,7 +104,7 @@ function resetHeroParallax(): void {
   heroShell?.style.removeProperty('--py');
 }
 
-/* ---------- project cards: tilt on a stationary hit wrapper ---------- */
+/* ---------- tilt cards (projects + hobbies) on stationary hit wrappers ---------- */
 
 interface TiltState {
   hit: HTMLElement;
@@ -121,7 +121,7 @@ interface TiltState {
 const tilts: TiltState[] = [];
 if (home) {
   home.querySelectorAll<HTMLElement>('.tilt-hit').forEach((hit) => {
-    const card = hit.querySelector<HTMLElement>('.work-card');
+    const card = hit.querySelector<HTMLElement>('[data-tilt]');
     if (card) tilts.push({ hit, card, frame: 0, rx: 0, ry: 0, mx: 50, my: 50, mxn: 0, myn: 0 });
   });
 }
@@ -172,6 +172,17 @@ function onEducationMove(event: PointerEvent, card: HTMLElement): void {
   const rect = card.getBoundingClientRect();
   card.style.setProperty('--edu-x', `${((event.clientX - rect.left) / rect.width) * 100}%`);
   card.style.setProperty('--edu-y', `${((event.clientY - rect.top) / rect.height) * 100}%`);
+}
+
+/* ---------- credential + contact tiles: pointer-following glow ---------- */
+
+const glowTargets = home ? Array.from(home.querySelectorAll<HTMLElement>('[data-glow]')) : [];
+
+function onGlowMove(event: PointerEvent, el: HTMLElement): void {
+  if (isReduced() || !finePointerQuery.matches) return;
+  const rect = el.getBoundingClientRect();
+  el.style.setProperty('--glow-x', `${((event.clientX - rect.left) / rect.width) * 100}%`);
+  el.style.setProperty('--glow-y', `${((event.clientY - rect.top) / rect.height) * 100}%`);
 }
 
 /* ---------- velocity band: scroll-driven rows ---------- */
@@ -343,6 +354,10 @@ function start(): void {
 
   educationCards.forEach((card) => {
     card.addEventListener('pointermove', (event) => onEducationMove(event, card), { signal });
+  });
+
+  glowTargets.forEach((el) => {
+    el.addEventListener('pointermove', (event) => onGlowMove(event, el), { signal });
   });
 
   window.addEventListener('scroll', onScroll, { passive: true, signal });

@@ -243,6 +243,82 @@
 .education-grid article:hover:after { transform: none; }
 .education-grid article:hover h3 { color: var(--link); }
 
+/* ---- Credentials: staggered fade-in + pointer glow ---- */
+/* Entrance is opacity-only: the grid paints its 1px gap lines from a shared
+   background, so a translateY would briefly expose the seams. The stagger
+   delay rides a --stagger var so hover background-color stays instant. */
+.credentials-section .credential-grid article {
+  --glow-x: 50%; --glow-y: 50%;
+  position: relative;
+  transition: opacity 0.5s ease var(--stagger, 0s), background-color 0.3s ease;
+}
+.credentials-section .credential-grid article:before {
+  content: ''; position: absolute; inset: 0; pointer-events: none;
+  background: radial-gradient(220px circle at var(--glow-x) var(--glow-y), var(--glare), transparent 60%);
+  opacity: 0; transition: opacity 0.25s;
+}
+.credentials-section .credential-grid article > * { position: relative; }
+.credentials-section .credential-grid article:hover:before { opacity: 1; }
+.credentials-section .credential-grid article:hover { background: color-mix(in srgb, var(--surface-alt) 70%, var(--surface)); }
+.credentials-section .credential-grid article:hover span { color: var(--link); }
+.motion-ready .credentials-section .credential-grid article { opacity: 0; }
+.motion-ready .credentials-section.is-visible .credential-grid article { opacity: 1; }
+.motion-ready .credentials-section .credential-grid article:nth-child(1) { --stagger: 0.04s; }
+.motion-ready .credentials-section .credential-grid article:nth-child(2) { --stagger: 0.09s; }
+.motion-ready .credentials-section .credential-grid article:nth-child(3) { --stagger: 0.14s; }
+.motion-ready .credentials-section .credential-grid article:nth-child(4) { --stagger: 0.19s; }
+.motion-ready .credentials-section .credential-grid article:nth-child(5) { --stagger: 0.24s; }
+.motion-ready .credentials-section .credential-grid article:nth-child(6) { --stagger: 0.29s; }
+.motion-ready .credentials-section .credential-grid article:nth-child(7) { --stagger: 0.34s; }
+.motion-ready .credentials-section .credential-grid article:nth-child(8) { --stagger: 0.39s; }
+.motion-ready .credentials-section .credential-grid article:nth-child(9) { --stagger: 0.44s; }
+.motion-ready .credentials-section .credential-grid article:nth-child(10) { --stagger: 0.49s; }
+.motion-ready .credentials-section .credential-grid article:nth-child(11) { --stagger: 0.54s; }
+
+/* ---- Connect: directional fill wipe + arrow slide + pointer glow ---- */
+.connect-section .contact-list a {
+  --glow-x: 50%; --glow-y: 50%;
+  position: relative; isolation: isolate;
+  transition: color 0.25s ease;
+}
+.connect-section .contact-list a:before {
+  content: ''; position: absolute; inset: 0; z-index: -2; background: var(--surface-alt);
+  transform: scaleX(0); transform-origin: left center;
+  transition: transform 0.38s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.connect-section .contact-list a:after {
+  content: ''; position: absolute; inset: 0; z-index: -1; pointer-events: none;
+  background: radial-gradient(260px circle at var(--glow-x) var(--glow-y), var(--glare), transparent 60%);
+  opacity: 0; transition: opacity 0.25s;
+}
+.connect-section .contact-list a:hover { color: var(--link); background: transparent; }
+.connect-section .contact-list a:hover:before { transform: scaleX(1); }
+.connect-section .contact-list a:hover:after { opacity: 1; }
+.connect-section .contact-list a span { display: inline-block; transition: transform 0.28s cubic-bezier(0.22, 1, 0.36, 1); }
+.connect-section .contact-list a:hover span { transform: translateX(5px); }
+
+/* ---- Hobbies: tilt + glare via the shared tilt engine ---- */
+.tilt-hit .hobby-card { height: 100%; }
+.hobby-card {
+  --rx: 0deg; --ry: 0deg; --mx: 50%; --my: 50%;
+  position: relative;
+  transform: rotateX(var(--rx)) rotateY(var(--ry)) translateZ(0);
+  transform-style: preserve-3d;
+  transition: transform 0.14s ease-out, border-color 0.3s ease, box-shadow 0.25s;
+}
+.hobby-card:before {
+  content: ''; position: absolute; inset: 0; pointer-events: none;
+  background: radial-gradient(420px circle at var(--mx) var(--my), var(--glare), transparent 55%);
+  opacity: 0; transition: opacity 0.2s;
+}
+.hobby-card > * { position: relative; }
+.hobby-card.is-tilting:before { opacity: 1; }
+.hobby-card.is-tilting {
+  border-color: var(--link);
+  border-color: color-mix(in srgb, var(--link) 58%, var(--border));
+  box-shadow: 0 1.2rem 3rem var(--motion-shadow);
+}
+
 /* ---- Coarse pointers / no hover: no transforms, press feedback ---- */
 @media (hover: none), (pointer: coarse) {
   .signal-field { transform: none !important; }
@@ -253,6 +329,12 @@
   .education-grid article:before { display: none; }
   .education-grid article:hover { transform: none; border-color: var(--border); box-shadow: none; }
   .education-grid article:active { transform: scale(0.985); border-color: var(--link); }
+  .credentials-section .credential-grid article:before { display: none; }
+  .contact-list a:after { display: none; }
+  .contact-list a:active:before { transform: scaleX(1); }
+  .hobby-card { transform: none !important; }
+  .hobby-card:before { display: none; }
+  .hobby-card:active { transform: scale(0.985) !important; border-color: var(--link); }
   .timeline article:active > span { transform: scale(1.25); background: var(--accent); }
   .timeline article:active .exp-row { transform: translateX(5px); border-color: var(--border); background: var(--surface); }
 }
@@ -270,6 +352,11 @@
   .timeline article:active .exp-row { transform: translateX(5px); border-color: var(--border); background: var(--surface); }
   .education-grid article:hover { transform: none; border-color: var(--border); box-shadow: none; }
   .education-grid article:active { transform: scale(0.985); border-color: var(--link); }
+  .credentials-section .credential-grid article:before { display: none; }
+  .contact-list a:after { display: none; }
+  .hobby-card { transform: none !important; }
+  .hobby-card:before { display: none; }
+  .hobby-card:active { transform: scale(0.985) !important; border-color: var(--link); }
 }
 
 /* ---- Reduced motion: everything static, nothing hidden ---- */
@@ -285,6 +372,7 @@
   .timeline > article,
   .exp-row,
   .education-grid article,
+  .hobby-card,
   .home-page .post-list article,
   .home-page .post-list .post-cover img { transform: none !important; }
   .work-card .card-visual img { inset: 0; width: 100%; height: 100%; }
@@ -294,6 +382,13 @@
   .kinetic-about .word { color: inherit; transform: none; filter: none; }
   .kinetic-heading .char { padding: 0; color: inherit; transform: none; }
   .kinetic-heading .char:hover { font-weight: inherit; }
+  .credentials-section .credential-grid article:before,
+  .connect-section .contact-list a:before,
+  .connect-section .contact-list a:after,
+  .hobby-card:before { display: none; }
+  .connect-section .contact-list a:hover { background: var(--surface-alt); }
+  .connect-section .contact-list a span { transform: none; transition: none; }
+  .motion-ready .credentials-section .credential-grid article { opacity: 1; transition: none; }
   ::view-transition-old(root),
   ::view-transition-new(root) { animation: none !important; }
 }
