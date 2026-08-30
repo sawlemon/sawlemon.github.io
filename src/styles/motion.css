@@ -36,7 +36,15 @@
 }
 
 /* ---- Hero: layered signal field + fine-pointer parallax ---- */
-.hero-shell { position: relative; isolation: isolate; overflow: hidden; border-bottom: 1px solid var(--border); }
+/* The shell fills the first viewport below the sticky header (4.5rem + 1px
+   border) so the About section always starts below the fold; the hero
+   content centers vertically inside it. */
+.hero-shell {
+  position: relative; isolation: isolate; overflow: hidden; border-bottom: 1px solid var(--border);
+  display: grid; align-items: center;
+  min-height: calc(100vh - 4.5rem);
+  min-height: calc(100svh - 4.5rem);
+}
 .hero-shell .hero { position: relative; z-index: 2; }
 .hero-content { position: relative; z-index: 3; }
 .signal-field {
