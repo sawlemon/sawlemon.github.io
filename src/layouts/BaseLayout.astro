@@ -5,6 +5,7 @@ import '@fontsource-variable/sora';
 import '@fontsource-variable/bodoni-moda';
 import '@fontsource/jetbrains-mono';
 import '../styles/global.css';
+import '../styles/motion.css';
 
 interface Props {
   title: string;
@@ -28,9 +29,20 @@ const { title, description } = Astro.props;
     <link rel="alternate" type="application/rss+xml" title="Sawlemon blog" href="/rss.xml" />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <script is:inline>
-      const savedTheme = localStorage.getItem('theme');
-      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-      document.documentElement.dataset.theme = savedTheme ?? (prefersDark ? 'dark' : 'light');
+      (function () {
+        var root = document.documentElement;
+        var savedTheme = null;
+        try {
+          savedTheme = localStorage.getItem('theme');
+        } catch (error) {
+          /* storage blocked — fall through to OS preference */
+        }
+        var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        var theme = savedTheme === 'light' || savedTheme === 'dark' ? savedTheme : prefersDark ? 'dark' : 'light';
+        root.dataset.theme = theme;
+        var meta = document.querySelector('meta[name="theme-color"]');
+        if (meta) meta.setAttribute('content', theme === 'dark' ? '#0B0D0A' : '#F7F8F2');
+      })();
     </script>
     <title>{title}</title>
   </head>
@@ -38,14 +50,47 @@ const { title, description } = Astro.props;
     <a class="skip-link" href="#main">Skip to content</a>
     <slot />
     <script is:inline>
-      document.querySelectorAll('[data-theme-toggle]').forEach((button) => {
-        button.addEventListener('click', () => {
-          const next = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark';
-          document.documentElement.dataset.theme = next;
-          localStorage.setItem('theme', next);
-          button.setAttribute('aria-pressed', String(next === 'dark'));
+      (function () {
+        var root = document.documentElement;
+        var switching = false;
+        function syncToggleChrome() {
+          var dark = root.dataset.theme === 'dark';
+          document.querySelectorAll('meta[name="theme-color"]').forEach(function (meta) {
+            meta.setAttribute('content', dark ? '#0B0D0A' : '#F7F8F2');
+          });
+          document.querySelectorAll('[data-theme-toggle]').forEach(function (button) {
+            button.setAttribute('aria-pressed', String(dark));
+            button.setAttribute('aria-label', dark ? 'Switch to light theme' : 'Switch to dark theme');
+          });
+        }
+        function swapTheme() {
+          root.dataset.theme = root.dataset.theme === 'dark' ? 'light' : 'dark';
+          try {
+            localStorage.setItem('theme', root.dataset.theme);
+          } catch (error) {
+            /* storage blocked — theme still switches for this visit */
+          }
+          syncToggleChrome();
+        }
+        document.querySelectorAll('[data-theme-toggle]').forEach(function (button) {
+          button.addEventListener('click', function (event) {
+            if (switching) return;
+            var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+            if (!reduced && typeof document.startViewTransition === 'function') {
+              switching = true;
+              root.style.setProperty('--vt-x', event.clientX + 'px');
+              root.style.setProperty('--vt-y', event.clientY + 'px');
+              var transition = document.startViewTransition(swapTheme);
+              transition.finished.finally(function () {
+                switching = false;
+              });
+            } else {
+              swapTheme();
+            }
+          });
         });
-      });
+        syncToggleChrome();
+      })();
     </script>
   </body>
 </html>
