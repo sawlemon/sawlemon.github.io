@@ -4,3 +4,6 @@ dist/
 .DS_Store
 scripts/refresh-music/.profile/
 scripts/refresh-music/node_modules/
+__pycache__/
+# Local Apple Music Replay runs contain private listening snapshots.
+.replay-runs/

@@ -47,8 +47,10 @@ npm run preview
 | `npm run check` | Runs Astro and TypeScript diagnostics |
 | `npm run build` | Builds the static site into `dist/` |
 | `npm run preview` | Serves the contents of `dist/` locally |
-| `npm run music:refresh -- --no-push` | Refreshes Replay data without committing or pushing |
-| `npm run music:refresh` | Refreshes Replay data, commits `src/data/music.json`, and pushes `main` |
+| `npm run music:refresh -- --no-push` | Refreshes Replay data, validates, checks, and updates `music.json` without committing or pushing |
+| `npm run music:refresh -- --skip-fetch --no-push` | Rebuilds from existing Replay snapshots without opening Apple Music |
+| `npm run music:refresh -- --plan` | Offline, write-free plan over an existing snapshot run |
+| `npm run music:refresh` | Refreshes Replay data, commits `src/data/music.json`, and pushes `main` after strict preflight |
 | `npm run books:build -- <csv>` | Converts a Goodreads library export CSV into `src/data/books.json` |
 
 ## Repository layout
@@ -57,8 +59,9 @@ npm run preview
 .github/workflows/deploy.yml       GitHub Pages build and deploy workflow
 public/images/                     Static images copied into the build
 scripts/build-books-data.py        Converts a Goodreads library export CSV into site data
-scripts/build-music-data.py        Converts Replay API responses into site data
-scripts/refresh-music/             Browser-based Replay refresh tool
+scripts/build-music-data.py        Compatibility wrapper for the Replay canonicalizer
+scripts/music-pipeline/             Replay acquisition, snapshots, validation, and publishing
+scripts/refresh-music/               Compatibility entrypoint and private browser profile
 src/components/                    Shared header and footer
 src/content/blog/                  Local and external writing entries
 src/data/books.json                Generated reading data from the Goodreads export
@@ -145,7 +148,7 @@ The About, Connect, and Hobbies copy currently lives in [`src/pages/index.astro`
 
 The Replay page reads [`src/data/music.json`](src/data/music.json). Do not hand-edit that file unless you are fixing generated data deliberately.
 
-The refresh tool opens Apple Music Replay in Chromium, waits for login, captures the API requests made by the Replay app, fetches available year and month summaries, and rebuilds `music.json`. Authentication tokens remain in browser memory. The script does not log or write them to disk.
+The refresh tool is a staged pipeline: it captures available years and month summaries through a logged-in Chromium session, stores private raw responses in ephemeral run directories outside the repo, validates and canonicalizes them offline, atomically updates `music.json`, runs the site checks, and then commits/pushes only that file. Authentication tokens remain in browser memory. The pipeline never logs or writes them to disk.
 
 Install the refresh tool once:
 
@@ -169,7 +172,13 @@ The full command is intentionally more aggressive:
 npm run music:refresh
 ```
 
-It runs the fetch, build, and checks, then commits only `src/data/music.json` and pushes `main`. It refuses to perform the commit step from any other branch.
+It runs the fetch, validation, canonicalization, and checks, then commits only `src/data/music.json` and pushes `main`. It refuses to start if the tree is dirty, the branch is not exactly `main`, or local `main` is out of sync with `origin/main`. After publishing, it verifies that only `music.json` changed and confirms the remote head.
+
+For an offline, write-free preview of an existing completed run, use `--plan`. It opens no browser, makes no network request, does not modify `music.json`, and reports hashes, years, coverage, and whether the target would change:
+
+```sh
+npm run music:refresh -- --plan
+```
 
 To rebuild from existing files in `/tmp/replay/` without opening Apple Music:
 
@@ -177,7 +186,7 @@ To rebuild from existing files in `/tmp/replay/` without opening Apple Music:
 npm run music:refresh -- --skip-fetch --no-push
 ```
 
-The persistent browser profile is stored under `scripts/refresh-music/.profile/` and ignored by Git. See [`scripts/refresh-music/README.md`](scripts/refresh-music/README.md) for script-specific notes.
+Replay snapshots are stored under `${REPLAY_DIR:-/tmp/replay}/runs/` and retain only the newest three completed runs by default. Raw responses never enter Git. The persistent browser profile is stored under `scripts/refresh-music/.profile/` and ignored by Git. See [`scripts/refresh-music/README.md`](scripts/refresh-music/README.md) for flags, rollback behavior, and script-specific notes.
 
 ## Refresh the books data
 

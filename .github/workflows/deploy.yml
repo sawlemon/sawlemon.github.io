@@ -24,6 +24,7 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
+      - run: python3 scripts/music-pipeline/canonicalize/validate.py --input src/data/music.json
       - run: npm run check
       - run: npm run build
       - uses: actions/upload-pages-artifact@v3
