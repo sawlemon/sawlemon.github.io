@@ -6,6 +6,12 @@ import music from '../data/music.json';
 
 const years = Object.keys(music.years).sort().reverse();
 const latest = years[0];
+const oldest = years.at(-1) ?? latest;
+const totalMinutes = years.reduce(
+  (total, year) => total + music.years[year as keyof typeof music.years].minutes,
+  0
+);
+const yearRange = oldest === latest ? latest : `${oldest}–${latest}`;
 
 const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
@@ -16,15 +22,15 @@ const embedUrl = (playlist: { id: string; url: string }) => {
 };
 ---
 
-<BaseLayout title="Music | Solomon Raj A" description="My Apple Music Replay listening stats — top songs, artists, and minutes per month for 2025 and 2026.">
+<BaseLayout title="Music | Solomon Raj A" description={`My Apple Music Replay listening stats — top songs, artists, and minutes per month for ${yearRange}.`}>
   <Header />
-  <main id="main" class="wrap music-page">
-    <section class="hero" aria-labelledby="music-title">
+  <main id="main" class="wrap music-page" data-page-motion>
+    <section class="hero page-reveal" aria-labelledby="music-title">
       <p class="eyebrow">Apple Music Replay</p>
       <h1 id="music-title">Music</h1>
       <p class="hero-role">
-        Everything I’ve played since Replay started tracking — {fmt(music.years['2025'].minutes + music.years['2026'].minutes)} minutes
-        across 2025 and 2026.
+        Everything I’ve played since Replay started tracking — {fmt(totalMinutes)} minutes
+        across {yearRange}.
       </p>
       <div class="year-switch" role="tablist" aria-label="Replay year">
         {years.map((year) => (
@@ -44,19 +50,19 @@ const embedUrl = (playlist: { id: string; url: string }) => {
       return (
         <div id={`year-panel-${year}`} role="tabpanel" aria-labelledby={`year-tab-${year}`}
           class:list={['year-panel', { 'is-hidden': year !== latest }]} data-year-panel={year}>
-          <section class="section" aria-label={`${year} overview`}>
+          <section class="section page-reveal" aria-label={`${year} overview`}>
             <p class="section-label">{year} / OVERVIEW</p>
             <div>
               <div class="stat-row">
-                <article class="stat-card">
+                <article class="stat-card" style="--i:0">
                   <p class="stat-value">{fmt(data.minutes)}</p>
                   <p class="stat-label">minutes listened</p>
                 </article>
-                <article class="stat-card">
+                <article class="stat-card" style="--i:1">
                   <p class="stat-value">{topArtist.name}</p>
                   <p class="stat-label">top artist · {fmt(topArtist.minutes)} min</p>
                 </article>
-                <article class="stat-card">
+                <article class="stat-card" style="--i:2">
                   <p class="stat-value">{topSong.title}</p>
                   <p class="stat-label">top song · {topSong.plays} plays</p>
                 </article>
@@ -70,7 +76,7 @@ const embedUrl = (playlist: { id: string; url: string }) => {
                   return (
                     <li class:list={['month-bar', { empty: !month }]}>
                       <div class="bar-track">
-                        <div class="bar-fill" style={`height:${month ? Math.max(height, 4) : 0}%`}
+                        <div class="bar-fill" style={`height:${month ? Math.max(height, 4) : 0}%;--i:${index}`}
                           title={month ? `${label} ${year}: ${fmt(month.minutes)} minutes` : `${label} ${year}: no data`} />
                       </div>
                       <span class="bar-minutes">{month ? fmt(month.minutes) : '—'}</span>
@@ -83,14 +89,14 @@ const embedUrl = (playlist: { id: string; url: string }) => {
             </div>
           </section>
 
-          <section class="section" aria-label={`${year} top artists and songs`}>
+          <section class="section page-reveal" aria-label={`${year} top artists and songs`}>
             <p class="section-label">{year} / TOP ARTISTS &amp; SONGS</p>
             <div class="top-grid">
               <div>
                 <h3 class="sub-heading">Top artists</h3>
                 <ol class="ranked-list">
                   {data.topArtists.slice(0, 10).map((artist, i) => (
-                    <li>
+                    <li style={`--i:${i}`}>
                       <span class="rank">{String(i + 1).padStart(2, '0')}</span>
                       <span class="rank-main">{artist.name}</span>
                       <span class="rank-meta">{fmt(artist.minutes)} min · {artist.plays} plays</span>
@@ -102,7 +108,7 @@ const embedUrl = (playlist: { id: string; url: string }) => {
                 <h3 class="sub-heading">Top songs</h3>
                 <ol class="ranked-list song-list">
                   {data.topSongs.slice(0, 10).map((song, i) => (
-                    <li>
+                    <li style={`--i:${i}`}>
                       <span class="rank">{String(i + 1).padStart(2, '0')}</span>
                       <img class="song-art" src={song.artwork ?? ''} alt="" width="56" height="56" loading="lazy" />
                       <span class="rank-main">
@@ -118,7 +124,7 @@ const embedUrl = (playlist: { id: string; url: string }) => {
           </section>
 
           {data.playlist && (
-            <section class="section" aria-label={`${data.playlist.name} playlist`}>
+            <section class="section page-reveal" aria-label={`${data.playlist.name} playlist`}>
               <p class="section-label">{year} / PLAYLIST</p>
               <div>
                 <h3 class="sub-heading">{data.playlist.name}</h3>
@@ -155,15 +161,29 @@ const embedUrl = (playlist: { id: string; url: string }) => {
   <Footer />
   <script is:inline>
     (() => {
+      const reduced = window.matchMedia('(prefers-reduced-motion: reduce)');
       const tabs = document.querySelectorAll('.year-button');
       const panels = document.querySelectorAll('[data-year-panel]');
       tabs.forEach((tab) => {
         tab.addEventListener('click', () => {
           const year = tab.getAttribute('data-year');
           tabs.forEach((t) => t.setAttribute('aria-selected', String(t === tab)));
-          panels.forEach((p) => p.classList.toggle('is-hidden', p.getAttribute('data-year-panel') !== year));
+          panels.forEach((p) => {
+            const match = p.getAttribute('data-year-panel') === year;
+            p.classList.toggle('is-hidden', !match);
+            if (match && !reduced.matches) {
+              // Replay the panel entrance: reset the class, force a layout
+              // pass, then re-add so the animation runs from its start.
+              p.classList.remove('is-panel-in');
+              void p.offsetWidth;
+              p.classList.add('is-panel-in');
+            }
+          });
         });
       });
     })();
+  </script>
+  <script>
+    import '../scripts/page-motion.ts';
   </script>
 </BaseLayout>

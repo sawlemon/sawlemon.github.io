@@ -40,18 +40,18 @@ const bookMeta = (book: Book) =>
 
 <BaseLayout title="Books | Solomon Raj A" description="A timeline of the books I have read and what I am reading now. No ratings, no reviews, just the record.">
   <Header />
-  <main id="main" class="wrap books-page">
-    <header class="hero">
+  <main id="main" class="wrap books-page" data-page-motion>
+    <header class="hero page-reveal">
       <p class="eyebrow books-label"><span class="hobbies-marker" aria-hidden="true"></span>[ 09 / READING ]</p>
       <h1>Books</h1>
       <p class="books-lead">What I have read, newest first. No ratings, no reviews, just the record.</p>
     </header>
 
-    <section class="section" aria-labelledby="reading-now-label">
+    <section class="section page-reveal" aria-labelledby="reading-now-label">
       <p class="section-label" id="reading-now-label">Currently reading</p>
       <div class="reading-now-grid">
-        {reading.map((book) => (
-          <article class="book-card">
+        {reading.map((book, index) => (
+          <article class="book-card" style={`--i:${index}`}>
             <h3>{book.title}</h3>
             <p>{book.author}</p>
             <span class="book-status">Now reading</span>
@@ -60,15 +60,15 @@ const bookMeta = (book: Book) =>
       </div>
     </section>
 
-    <section class="section" aria-labelledby="timeline-label">
+    <section class="section page-reveal" aria-labelledby="timeline-label">
       <p class="section-label" id="timeline-label">Timeline</p>
       <div class="book-timeline">
         {timeline.map((group) => (
-          <div class="book-month">
+          <div class="book-month page-reveal">
             <h2>{group.label}</h2>
             <ul>
-              {group.items.map((book) => (
-                <li>
+              {group.items.map((book, index) => (
+                <li style={`--i:${index}`}>
                   <div>
                     <h3>{book.title}</h3>
                     <p class="book-author">{book.author}</p>
@@ -83,11 +83,11 @@ const bookMeta = (book: Book) =>
     </section>
 
     {undatedReads.length > 0 && (
-      <section class="section" aria-labelledby="undated-label">
+      <section class="section page-reveal" aria-labelledby="undated-label">
         <p class="section-label" id="undated-label">Read, date not recorded</p>
         <ul class="book-undated">
-          {undatedReads.map((book) => (
-            <li>
+          {undatedReads.map((book, index) => (
+            <li style={`--i:${index}`}>
               <div>
                 <h3>{book.title}</h3>
                 <p class="book-author">{book.author}</p>
@@ -99,4 +99,7 @@ const bookMeta = (book: Book) =>
     )}
   </main>
   <Footer />
+  <script>
+    import '../scripts/page-motion.ts';
+  </script>
 </BaseLayout>

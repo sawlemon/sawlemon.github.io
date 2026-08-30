@@ -327,6 +327,138 @@
   box-shadow: 0 1.2rem 3rem var(--motion-shadow);
 }
 
+/* ---- Music & Books pages: shared reveals + section motion ---- */
+/* Same contract as the homepage: hidden states only exist under
+   .motion-ready, which page-motion.ts adds after the observer registers. */
+.motion-ready .page-reveal {
+  opacity: 0; transform: translateY(18px);
+  transition: opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1), transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.motion-ready .page-reveal.is-visible { opacity: 1; transform: none; }
+
+@keyframes page-rise {
+  from { opacity: 0; transform: translateY(14px); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes bar-grow {
+  from { transform: scaleY(0); }
+  to { transform: scaleY(1); }
+}
+@keyframes panel-rise {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: none; }
+}
+
+/* Music: stagger children once their section reveals (backwards fill so
+   hover transforms work normally after the entrance finishes) */
+.motion-ready .year-panel .section:not(.is-visible) .stat-card,
+.motion-ready .year-panel .section:not(.is-visible) .ranked-list li,
+.motion-ready .year-panel .section:not(.is-visible) .bar-fill { opacity: 0; }
+.motion-ready .year-panel .section.is-visible .stat-card {
+  animation: page-rise 0.55s cubic-bezier(0.22, 1, 0.36, 1) backwards;
+  animation-delay: calc(var(--i, 0) * 0.08s);
+}
+.motion-ready .year-panel .section.is-visible .ranked-list li {
+  animation: page-rise 0.5s cubic-bezier(0.22, 1, 0.36, 1) backwards;
+  animation-delay: calc(min(var(--i, 0), 9) * 0.045s);
+}
+.motion-ready .year-panel .section.is-visible .bar-fill {
+  transform-origin: bottom;
+  animation: bar-grow 0.6s cubic-bezier(0.22, 1, 0.36, 1) backwards;
+  animation-delay: calc(var(--i, 0) * 0.04s);
+}
+/* switching years replays a single panel-level rise */
+.year-panel.is-panel-in { animation: panel-rise 0.4s cubic-bezier(0.22, 1, 0.36, 1); }
+
+/* Music: hover states */
+.music-page .year-button { transition: background 0.2s, color 0.2s, border-color 0.2s, transform 0.2s; }
+.music-page .year-button:hover,
+.music-page .year-button:focus-visible { border-color: var(--link); color: var(--link); transform: translateY(-2px); }
+.music-page .year-button:focus-visible { outline: 2px solid var(--link); outline-offset: 2px; }
+.music-page .year-button[aria-selected='true']:hover { border-color: var(--accent); background: var(--accent); color: var(--on-accent); transform: none; }
+
+.music-page .stat-card { transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1), background-color 0.3s ease, box-shadow 0.3s; }
+.music-page .stat-card:hover {
+  transform: translateY(-5px);
+  background: color-mix(in srgb, var(--surface-alt) 70%, var(--surface));
+  box-shadow: 0 0.8rem 1.8rem var(--motion-shadow);
+}
+.music-page .stat-value { transition: color 0.25s; }
+.music-page .stat-card:hover .stat-value { color: var(--link); }
+
+.music-page .ranked-list li { transition: transform 0.25s ease, background-color 0.25s ease; }
+.music-page .ranked-list li:hover { transform: translateX(6px); background: var(--surface); }
+.music-page .rank { transition: color 0.25s; }
+.music-page .ranked-list li:hover .rank { color: var(--link); }
+.music-page .song-art { transition: transform 0.25s ease; }
+.music-page .ranked-list li:hover .song-art { transform: scale(1.04); }
+
+.music-page .playlist-embed { transition: border-color 0.3s, box-shadow 0.3s; }
+.music-page .playlist-embed:hover,
+.music-page .playlist-embed:focus-within {
+  border-color: color-mix(in srgb, var(--link) 45%, var(--border));
+  box-shadow: 0 1rem 2.4rem var(--motion-shadow);
+}
+
+/* Books: currently-reading cards. The grid draws its dividers from a shared
+   background, so no lift — tint, inset lemon ring, glare, corner square. */
+.books-page .book-card { position: relative; transition: background-color 0.3s ease, box-shadow 0.3s; }
+.books-page .book-card > * { position: relative; }
+.books-page .book-card:before {
+  content: ''; position: absolute; inset: 0; pointer-events: none;
+  background: radial-gradient(240px circle at 50% 0%, var(--glare), transparent 70%);
+  opacity: 0; transition: opacity 0.25s;
+}
+.books-page .book-card:after {
+  content: ''; position: absolute; right: 0.9rem; top: 0.9rem; width: 0.5rem; height: 0.5rem;
+  background: var(--accent);
+  opacity: 0; transform: translate(-5px, 5px);
+  transition: opacity 0.25s, transform 0.25s;
+}
+.books-page .book-card:hover {
+  background: color-mix(in srgb, var(--surface-alt) 70%, var(--surface));
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--link) 55%, transparent);
+}
+.books-page .book-card:hover:before,
+.books-page .book-card:hover:after { opacity: 1; }
+.books-page .book-card:hover:after { transform: none; }
+.books-page .book-card h3 { transition: color 0.25s; }
+.books-page .book-card:hover h3 { color: var(--link); }
+
+/* Books: timeline + undated rows echo the experience-row hover */
+.books-page .book-month li,
+.books-page .book-undated li { transition: transform 0.28s cubic-bezier(0.22, 1, 0.36, 1), background-color 0.28s ease; }
+.books-page .book-month li:hover,
+.books-page .book-undated li:hover { transform: translateX(6px); background: var(--surface); }
+.books-page .book-month h3,
+.books-page .book-undated h3 { transition: color 0.25s; }
+.books-page .book-month li:hover h3,
+.books-page .book-undated li:hover h3 { color: var(--link); }
+.books-page .book-month h3:before { transition: transform 0.28s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.28s; }
+.books-page .book-month li:hover h3:before {
+  transform: scale(1.3);
+  box-shadow: 0 0 0 5px color-mix(in srgb, var(--accent) 16%, transparent);
+}
+.books-page .book-meta { transition: transform 0.25s, color 0.25s; }
+.books-page .book-month li:hover .book-meta { transform: translateX(-4px); color: var(--text); }
+
+/* Books: staggered children per revealed section / month group */
+.motion-ready .books-page .section:not(.is-visible) .book-card,
+.motion-ready .books-page .section:not(.is-visible) .book-undated li,
+.motion-ready .book-month:not(.is-visible) li { opacity: 0; }
+.motion-ready .books-page .section.is-visible .book-card {
+  animation: page-rise 0.55s cubic-bezier(0.22, 1, 0.36, 1) backwards;
+  animation-delay: calc(var(--i, 0) * 0.09s);
+}
+.motion-ready .book-month.is-visible li {
+  animation: page-rise 0.5s cubic-bezier(0.22, 1, 0.36, 1) backwards;
+  animation-delay: calc(min(var(--i, 0), 5) * 0.06s);
+}
+.motion-ready .books-page .section.is-visible .book-undated li {
+  animation: page-rise 0.5s cubic-bezier(0.22, 1, 0.36, 1) backwards;
+  animation-delay: calc(min(var(--i, 0), 5) * 0.06s);
+}
+
 /* ---- Coarse pointers / no hover: no transforms, press feedback ---- */
 @media (hover: none), (pointer: coarse) {
   .signal-field { transform: none !important; }
@@ -343,6 +475,17 @@
   .hobby-card { transform: none !important; }
   .hobby-card:before { display: none; }
   .hobby-card:active { transform: scale(0.985) !important; border-color: var(--link); }
+  .music-page .year-button:hover { transform: none; }
+  .music-page .stat-card:hover { transform: none; box-shadow: none; }
+  .music-page .ranked-list li:hover { transform: none; }
+  .music-page .ranked-list li:hover .song-art { transform: none; }
+  .music-page .stat-card:active { background: var(--surface-alt); }
+  .music-page .ranked-list li:active { background: var(--surface-alt); }
+  .books-page .book-month li:hover,
+  .books-page .book-undated li:hover { transform: none; }
+  .books-page .book-month li:active,
+  .books-page .book-undated li:active { background: var(--surface-alt); }
+  .books-page .book-card:active { background: var(--surface-alt); }
   .timeline article:active > span { transform: scale(1.25); background: var(--accent); }
   .timeline article:active .exp-row { transform: translateX(5px); border-color: var(--border); background: var(--surface); }
 }
@@ -365,6 +508,12 @@
   .hobby-card { transform: none !important; }
   .hobby-card:before { display: none; }
   .hobby-card:active { transform: scale(0.985) !important; border-color: var(--link); }
+  .music-page .year-button:hover { transform: none; }
+  .music-page .stat-card:hover { transform: none; box-shadow: none; }
+  .music-page .ranked-list li:hover { transform: none; }
+  .music-page .ranked-list li:hover .song-art { transform: none; }
+  .books-page .book-month li:hover,
+  .books-page .book-undated li:hover { transform: none; }
 }
 
 /* ---- Reduced motion: everything static, nothing hidden ---- */
@@ -397,6 +546,20 @@
   .connect-section .contact-list a:hover { background: var(--surface-alt); }
   .connect-section .contact-list a span { transform: none; transition: none; }
   .motion-ready .credentials-section .credential-grid article { opacity: 1; transition: none; }
+  .motion-ready .page-reveal { opacity: 1; transform: none; transition: none; }
+  .motion-ready .year-panel .section:not(.is-visible) .stat-card,
+  .motion-ready .year-panel .section:not(.is-visible) .ranked-list li,
+  .motion-ready .year-panel .section:not(.is-visible) .bar-fill,
+  .motion-ready .books-page .section:not(.is-visible) .book-card,
+  .motion-ready .books-page .section:not(.is-visible) .book-undated li,
+  .motion-ready .book-month:not(.is-visible) li { opacity: 1; }
+  .year-panel .stat-card,
+  .year-panel .ranked-list li,
+  .year-panel .bar-fill,
+  .year-panel.is-panel-in,
+  .books-page .book-card,
+  .books-page .book-month li,
+  .books-page .book-undated li { animation: none !important; transform: none !important; }
   ::view-transition-old(root),
   ::view-transition-new(root) { animation: none !important; }
 }
