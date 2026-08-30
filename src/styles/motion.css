@@ -2,15 +2,24 @@
  * Homepage motion system — ported from the approved standalone prototype
  * (~/Downloads/sawlemon-motion-prototype). Loaded after global.css.
  *
+ * Ownership:
+ *  - CSS (this file): visual states and the reduced-motion, coarse-pointer,
+ *    and narrow-screen fallbacks.
+ *  - motion/runtime.ts: lifecycle and safety policy — the `.motion-ready`
+ *    gate, reveal observation, the safety net, reduced motion, teardown,
+ *    and BFCache restart.
+ *  - home-motion.ts / page-motion.ts: route-specific adapters that own
+ *    selectors, pointer math, and effect state.
+ *
  * Safety rules baked in:
  *  - Nothing is hidden by default. Hidden/entrance states exist only under
- *    `.motion-ready`, which home-motion.ts adds after observers register —
+ *    `.motion-ready`, which the runtime adds after observers register —
  *    so a no-JS load shows every section.
  *  - Reduced motion forces static, visible end states (including the hero
  *    name fill, whose 1.9s animation-delay would otherwise stay transparent).
  *  - Coarse pointers get press feedback instead of tilt/parallax.
  *  - The only site-wide rules are the theme-toggle View Transition styles;
- *    everything else is scoped to homepage classes.
+ *    everything else is scoped to page classes.
  */
 
 /* ---- Motion tokens ---- */
@@ -329,7 +338,7 @@
 
 /* ---- Music & Books pages: shared reveals + section motion ---- */
 /* Same contract as the homepage: hidden states only exist under
-   .motion-ready, which page-motion.ts adds after the observer registers. */
+   .motion-ready, which motion/runtime.ts adds after observers register. */
 .motion-ready .page-reveal {
   opacity: 0; transform: translateY(18px);
   transition: opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1), transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
