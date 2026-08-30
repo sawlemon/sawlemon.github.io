@@ -1,0 +1,28 @@
+{
+  "data": [
+    { "id": "month-2024-01", "type": "music-summaries" }
+  ],
+  "resources": {
+    "music-summaries": {
+      "month-2024-01": {
+        "attributes": { "month": 1, "listenTimeInMinutes": 75 }
+      }
+    },
+    "artist-period-summaries": {
+      "mas1": {
+        "id": "mas1",
+        "attributes": { "listenTimeInMinutes": 70 },
+        "relationships": { "artist": { "data": [{ "id": "a1" }] } }
+      },
+      "mas2": {
+        "id": "mas2",
+        "attributes": { "listenTimeInMinutes": 5 },
+        "relationships": { "artist": { "data": [{ "id": "a2" }] } }
+      }
+    },
+    "artists": {
+      "a1": { "id": "a1", "attributes": { "name": "Fake Artist A" } },
+      "a2": { "id": "a2", "attributes": { "name": "Fake Artist B" } }
+    }
+  }
+}

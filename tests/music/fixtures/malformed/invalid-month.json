@@ -1,0 +1,8 @@
+{
+  "data": [{ "id": "month-2099-03" }],
+  "resources": {
+    "music-summaries": { "month-2099-03": { "attributes": { "month": 13, "listenTimeInMinutes": 10 } } },
+    "artist-period-summaries": {},
+    "artists": {}
+  }
+}

@@ -1,0 +1,96 @@
+{
+  "data": [
+    {
+      "id": "year-2024",
+      "type": "music-summaries",
+      "attributes": {},
+      "relationships": {}
+    }
+  ],
+  "resources": {
+    "song-period-summaries": {
+      "ss1": {
+        "id": "ss1",
+        "attributes": { "playCount": 30 },
+        "relationships": { "song": { "data": [{ "id": "s1" }] } }
+      },
+      "ss2": {
+        "id": "ss2",
+        "attributes": { "playCount": 50 },
+        "relationships": { "song": { "data": [{ "id": "s2" }] } }
+      },
+      "ss3": {
+        "id": "ss3",
+        "attributes": {},
+        "relationships": { "song": { "data": [{ "id": "s3" }] } }
+      }
+    },
+    "artist-period-summaries": {
+      "as1": {
+        "id": "as1",
+        "attributes": { "listenTimeInMinutes": 120, "playCount": 80 },
+        "relationships": { "artist": { "data": [{ "id": "a1" }] } }
+      },
+      "as2": {
+        "id": "as2",
+        "attributes": { "listenTimeInMinutes": 60, "playCount": 40 },
+        "relationships": { "artist": { "data": [{ "id": "a2" }] } }
+      }
+    },
+    "album-period-summaries": {
+      "al1": {
+        "id": "al1",
+        "attributes": { "listenTimeInMinutes": 90, "playCount": 25 },
+        "relationships": { "album": { "data": [{ "id": "alb1" }] } }
+      }
+    },
+    "songs": {
+      "s1": {
+        "id": "s1",
+        "attributes": {
+          "name": "Fake Song One",
+          "artistName": "Fake Artist A",
+          "albumName": "Fake Album",
+          "artwork": { "url": "https://is1-ssl.mzstatic.com/image/thumb/fake/{w}x{h}{c}.jpg" }
+        }
+      },
+      "s2": {
+        "id": "s2",
+        "attributes": {
+          "name": "Fake Song Two",
+          "artistName": "Fake Artist B",
+          "albumName": "Fake Album",
+          "artwork": { "url": "https://is1-ssl.mzstatic.com/image/thumb/fake/{w}x{h}{c}.jpg" }
+        }
+      },
+      "s3": {
+        "id": "s3",
+        "attributes": { "name": "Unrankable Song" }
+      }
+    },
+    "artists": {
+      "a1": { "id": "a1", "attributes": { "name": "Fake Artist A" } },
+      "a2": { "id": "a2", "attributes": { "name": "Fake Artist B" } }
+    },
+    "albums": {
+      "alb1": {
+        "id": "alb1",
+        "attributes": {
+          "name": "Fake Album",
+          "artistName": "Fake Artist A",
+          "artwork": { "url": "https://is1-ssl.mzstatic.com/image/thumb/fake/{w}x{h}{c}.jpg" }
+        }
+      }
+    },
+    "playlists": {
+      "pl-other": {
+        "id": "pl.other-1",
+        "attributes": { "name": "Chill Mix", "url": "https://music.apple.com/library/playlist/pl.other-1" }
+      },
+      "pl-rp-replay": {
+        "id": "pl.rp-fake-2024",
+        "attributes": { "name": "Replay 2024", "url": "https://music.apple.com/library/playlist/pl.rp-fake-2024" }
+      }
+    }
+  }
+}

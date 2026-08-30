@@ -1,0 +1,115 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "music.schema.json",
+  "title": "Canonical Replay music data",
+  "description": "The src/data/music.json contract consumed by src/pages/music.astro. Produced by scripts/music-pipeline/canonicalize/canonicalize.py; validated by canonicalize/validate.py before publication.",
+  "type": "object",
+  "required": ["generated", "years"],
+  "additionalProperties": false,
+  "properties": {
+    "generated": {
+      "type": "string",
+      "description": "Canonical build date (YYYY-MM-DD).",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+    },
+    "years": {
+      "type": "object",
+      "minProperties": 1,
+      "propertyNames": { "pattern": "^\\d{4}$" },
+      "additionalProperties": {
+        "type": "object",
+        "required": ["minutes", "months", "topSongs", "topArtists", "topAlbums"],
+        "additionalProperties": false,
+        "properties": {
+          "minutes": { "type": "integer", "minimum": 0, "description": "Must equal the sum of the month minutes." },
+          "months": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["month", "label", "minutes", "artists"],
+              "additionalProperties": false,
+              "properties": {
+                "month": { "type": "integer", "minimum": 1, "maximum": 12 },
+                "label": { "enum": ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"] },
+                "minutes": { "type": "integer", "minimum": 0 },
+                "artists": {
+                  "type": "array",
+                  "maxItems": 5,
+                  "items": {
+                    "type": "object",
+                    "required": ["name", "minutes"],
+                    "additionalProperties": false,
+                    "properties": {
+                      "name": { "type": "string", "minLength": 1 },
+                      "minutes": { "type": "integer", "minimum": 0 }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "topSongs": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "object",
+              "required": ["title", "artist", "plays"],
+              "additionalProperties": false,
+              "properties": {
+                "title": { "type": "string", "minLength": 1 },
+                "artist": { "type": "string", "minLength": 1 },
+                "album": { "type": ["string", "null"] },
+                "artwork": { "type": ["string", "null"], "pattern": "^https://([^/]*\\.)?mzstatic\\.com/" },
+                "plays": { "type": "integer", "minimum": 0 }
+              }
+            }
+          },
+          "topArtists": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "object",
+              "required": ["name", "minutes"],
+              "additionalProperties": false,
+              "properties": {
+                "name": { "type": "string", "minLength": 1 },
+                "minutes": { "type": "integer", "minimum": 0 },
+                "plays": { "type": "integer", "minimum": 0 }
+              }
+            }
+          },
+          "topAlbums": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["name", "minutes", "plays"],
+              "additionalProperties": false,
+              "properties": {
+                "name": { "type": "string", "minLength": 1 },
+                "artist": { "type": ["string", "null"] },
+                "artwork": { "type": ["string", "null"], "pattern": "^https://([^/]*\\.)?mzstatic\\.com/" },
+                "minutes": { "type": "integer", "minimum": 0 },
+                "plays": { "type": "integer", "minimum": 0 }
+              }
+            }
+          },
+          "playlist": {
+            "oneOf": [
+              { "type": "null" },
+              {
+                "type": "object",
+                "required": ["name", "url", "id"],
+                "additionalProperties": false,
+                "properties": {
+                  "name": { "type": "string", "minLength": 1 },
+                  "url": { "type": "string", "pattern": "^https://music\\.apple\\.com/" },
+                  "id": { "type": "string", "minLength": 1 }
+                }
+              }
+            ]
+          }
+        }
+      }
+    }
+  }
+}

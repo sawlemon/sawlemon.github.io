@@ -1,0 +1,59 @@
+{
+  "generated": "2024-01-01",
+  "years": {
+    "2024": {
+      "minutes": 120,
+      "months": [
+        {
+          "month": 1,
+          "label": "Jan",
+          "minutes": 75,
+          "artists": [
+            { "name": "Fake Artist A", "minutes": 70 },
+            { "name": "Fake Artist B", "minutes": 5 }
+          ]
+        },
+        {
+          "month": 2,
+          "label": "Feb",
+          "minutes": 45,
+          "artists": [{ "name": "Fake Artist B", "minutes": 40 }]
+        }
+      ],
+      "topSongs": [
+        {
+          "title": "Fake Song Two",
+          "artist": "Fake Artist B",
+          "album": "Fake Album",
+          "artwork": "https://is1-ssl.mzstatic.com/image/thumb/fake/200x200bb.jpg",
+          "plays": 50
+        },
+        {
+          "title": "Fake Song One",
+          "artist": "Fake Artist A",
+          "album": "Fake Album",
+          "artwork": "https://is1-ssl.mzstatic.com/image/thumb/fake/200x200bb.jpg",
+          "plays": 30
+        }
+      ],
+      "topArtists": [
+        { "name": "Fake Artist A", "minutes": 120, "plays": 80 },
+        { "name": "Fake Artist B", "minutes": 60, "plays": 40 }
+      ],
+      "topAlbums": [
+        {
+          "name": "Fake Album",
+          "artist": "Fake Artist A",
+          "artwork": "https://is1-ssl.mzstatic.com/image/thumb/fake/200x200bb.jpg",
+          "minutes": 90,
+          "plays": 25
+        }
+      ],
+      "playlist": {
+        "name": "Replay 2024",
+        "url": "https://music.apple.com/library/playlist/pl.rp-fake-2024",
+        "id": "pl.rp-fake-2024"
+      }
+    }
+  }
+}

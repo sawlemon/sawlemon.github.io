@@ -1,0 +1,22 @@
+{
+  "data": [
+    { "id": "month-2024-02", "type": "music-summaries" }
+  ],
+  "resources": {
+    "music-summaries": {
+      "month-2024-02": {
+        "attributes": { "month": 2, "listenTimeInMinutes": 45 }
+      }
+    },
+    "artist-period-summaries": {
+      "mas3": {
+        "id": "mas3",
+        "attributes": { "listenTimeInMinutes": 40 },
+        "relationships": { "artist": { "data": [{ "id": "a2" }] } }
+      }
+    },
+    "artists": {
+      "a2": { "id": "a2", "attributes": { "name": "Fake Artist B" } }
+    }
+  }
+}
