@@ -12,13 +12,23 @@
  *   runs/<run-id>/manifest.json     validated before promotion
  *   runs/<run-id>/raw/*.json        response payloads
  *
- * Retention keeps the newest N completed runs; pruning happens only after a
- * successful commit. Nothing here ever stores request headers, tokens,
- * cookies, or URLs with query strings.
+ * Manifest contract (contracts/raw-snapshot.schema.json): present entries
+ * carry a safe raw/ path plus a payloadSha256; absent entries are pathless
+ * and carry no hash. put() rejects payload names that could not form a
+ * safe raw/ path; every other field is enforced by the promotion gate.
+ * commit() runs the authoritative Python validator on the manifest before
+ * promoting: an invalid manifest never becomes a completed run, staging
+ * stays behind (abortable), and pruning of older completed runs does not
+ * happen.
+ *
+ * Retention keeps the newest N completed runs; pruning happens only after
+ * a validated, successful commit. Nothing here ever stores request
+ * headers, tokens, cookies, or URLs with query strings.
  */
 import { createHash } from 'node:crypto';
 import { cpSync, existsSync, mkdirSync, readdirSync, readFileSync, renameSync, rmSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
+import { validateManifestFile } from './manifest-check.mjs';
 
 export function sha256(text) {
   return createHash('sha256').update(text, 'utf8').digest('hex');
@@ -30,7 +40,19 @@ function assertSafeRunId(runId) {
   }
 }
 
-export function createSnapshotStore({ root, retainRuns = 3, clock = () => new Date() }) {
+/**
+ * The writer fabricates `raw/${name}` from this input, so a name that could
+ * never form a contract-valid raw/ path is rejected up front. Every other
+ * field (kind, id, status, httpStatus, commit inputs) is enforced by the
+ * promotion gate: the Python validator stays the single source of truth.
+ */
+function assertSafeFileName(name) {
+  if (typeof name !== 'string' || name === '' || name.includes('/') || name.includes('..')) {
+    throw new Error(`unsafe payload file name: ${JSON.stringify(name).slice(0, 40)}`);
+  }
+}
+
+export function createSnapshotStore({ root, retainRuns = 3, clock = () => new Date(), validateManifest = validateManifestFile }) {
   const runsDir = join(root, 'runs');
 
   function stagingDir(runId) {
@@ -65,6 +87,7 @@ export function createSnapshotStore({ root, retainRuns = 3, clock = () => new Da
       return {
         /** Writes one payload atomically and records its manifest entry. */
         put({ kind, id, name, payload, httpStatus = 200, observedAt = clock().toISOString() }) {
+          assertSafeFileName(name);
           const text = typeof payload === 'string' ? payload : JSON.stringify(payload);
           const target = join(staged, 'raw', name);
           const tmp = `${target}.tmp`;
@@ -99,7 +122,12 @@ export function createSnapshotStore({ root, retainRuns = 3, clock = () => new Da
             coverage,
             warnings
           };
-          writeFileSync(join(staged, 'manifest.json'), JSON.stringify(manifest, null, 1), { encoding: 'utf8' });
+          const manifestPath = join(staged, 'manifest.json');
+          writeFileSync(manifestPath, JSON.stringify(manifest, null, 1), { encoding: 'utf8' });
+          // Promotion gate: the manifest must satisfy the contract before
+          // the run becomes completed. On failure nothing is promoted, no
+          // older run is pruned, and staging remains for abort()/inspection.
+          validateManifest(manifestPath);
           const finalDir = join(runsDir, runId);
           if (existsSync(finalDir)) {
             throw new Error(`completed run already exists: ${runId}`);

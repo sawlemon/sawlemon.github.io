@@ -1,0 +1,1491 @@
+{
+  "$comment": "Shared parity corpus for the Replay snapshot-manifest contract. Every case is evaluated unchanged by (1) the JSON Schema compiled from scripts/music-pipeline/contracts/raw-snapshot.schema.json in strict draft-2020-12 mode with ajv-formats date-time (tests/music/node/schema-parity.test.mjs) and (2) the authoritative Python validator validate_raw_manifest (tests/music/python/test_schema_parity.py). Each case must agree with its 'valid' flag on both sides. Cases whose expected outcome can only be pinned on one side (year 0000 timestamps, control-character whitespace in runId, and JSON floats like 1.0/2.0, which JSON.parse cannot distinguish from integers) live in tests/music/python/test_validate.py instead; see the notes in the Node test.",
+  "cases": [
+    {
+      "name": "baseline-present-and-pathless-absent",
+      "manifest": {
+        "schemaVersion": 1,
+        "runId": "run-2024-01-01",
+        "source": "apple-music-replay",
+        "fetchedAt": "2024-01-01T00:00:00Z",
+        "years": ["2024"],
+        "snapshots": [
+          {
+            "kind": "year",
+            "id": "2024",
+            "path": "raw/year-2024.json",
+            "status": "present",
+            "httpStatus": 200,
+            "observedAt": "2024-01-01T00:00:01Z",
+            "payloadSha256": "9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08"
+          },
+          {
+            "kind": "month",
+            "id": "2024-02",
+            "status": "absent",
+            "httpStatus": 404,
+            "observedAt": "2024-01-01T00:00:02Z"
+          }
+        ],
+        "coverage": { "years": 1, "present": 1, "absent": 1 },
+        "warnings": []
+      },
+      "valid": true
+    },
+    {
+      "name": "minimal-required-fields-only",
+      "manifest": {
+        "schemaVersion": 1,
+        "runId": "run-2024-01-01",
+        "source": "apple-music-replay",
+        "fetchedAt": "2024-01-01T00:00:00Z",
+        "years": ["2024"],
+        "snapshots": [
+          {
+            "kind": "year",
+            "id": "2024",
+            "path": "raw/year-2024.json",
+            "status": "present",
+            "payloadSha256": "9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08"
+          }
+        ]
+      },
+      "valid": true
+    },
+    {
+      "name": "fully-pathless-absent-entries",
+      "manifest": {
+        "schemaVersion": 1,
+        "runId": "run-2024-01-01",
+        "source": "apple-music-replay",
+        "fetchedAt": "2024-01-01T00:00:00Z",
+        "years": ["2024"],
+        "snapshots": [
+          {
+            "kind": "year",
+            "id": "2024",
+            "status": "absent",
+            "httpStatus": 404,
+            "observedAt": "2024-01-01T00:00:00Z"
+          },
+          { "kind": "month", "id": "2024-03", "status": "absent" }
+        ]
+      },
+      "valid": true
+    },
+    {
+      "name": "month-present-entry",
+      "manifest": {
+        "schemaVersion": 1,
+        "runId": "run-2024-01-01",
+        "source": "apple-music-replay",
+        "fetchedAt": "2024-01-01T00:00:00Z",
+        "years": ["2024"],
+        "snapshots": [
+          {
+            "kind": "month",
+            "id": "2024-01",
+            "path": "raw/month-2024-01.json",
+            "status": "present",
+            "payloadSha256": "9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08"
+          }
+        ]
+      },
+      "valid": true
+    },
+    {
+      "name": "empty-years-array",
+      "manifest": {
+        "schemaVersion": 1,
+        "runId": "run-2024-01-01",
+        "source": "apple-music-replay",
+        "fetchedAt": "2024-01-01T00:00:00Z",
+        "years": [],
+        "snapshots": [
+          { "kind": "month", "id": "2024-03", "status": "absent" }
+        ]
+      },
+      "valid": true
+    },
+    {
+      "name": "coverage-and-warnings-with-content",
+      "manifest": {
+        "schemaVersion": 1,
+        "runId": "run-2024-01-01",
+        "source": "apple-music-replay",
+        "fetchedAt": "2024-01-01T00:00:00Z",
+        "years": ["2024"],
+        "snapshots": [
+          { "kind": "month", "id": "2024-03", "status": "absent" }
+        ],
+        "coverage": { "attempted": 1, "absent": 1 },
+        "warnings": ["month 2024-03 returned 404", "retried once"]
+      },
+      "valid": true
+    },
+    {
+      "name": "fetchedAt-lowercase-t-and-z",
+      "manifest": {
+        "schemaVersion": 1,
+        "runId": "run-2024-01-01",
+        "source": "apple-music-replay",
+        "fetchedAt": "2024-01-01t00:00:00z",
+        "years": ["2024"],
+        "snapshots": [
+          { "kind": "month", "id": "2024-03", "status": "absent" }
+        ]
+      },
+      "valid": true
+    },
+    {
+      "name": "fetchedAt-fractional-seconds",
+      "manifest": {
+        "schemaVersion": 1,
+        "runId": "run-2024-01-01",
+        "source": "apple-music-replay",
+        "fetchedAt": "2024-01-01T00:00:00.123456Z",
+        "years": ["2024"],
+        "snapshots": [
+          { "kind": "month", "id": "2024-03", "status": "absent" }
+        ]
+      },
+      "valid": true
+    },
+    {
+      "name": "fetchedAt-numeric-offset",
+      "manifest": {
+        "schemaVersion": 1,
+        "runId": "run-2024-01-01",
+        "source": "apple-music-replay",
+        "fetchedAt": "2024-01-01T09:30:00+05:30",
+        "years": ["2024"],
+        "snapshots": [
+          { "kind": "month", "id": "2024-03", "status": "absent" }
+        ]
+      },
+      "valid": true
+    },
+    {
+      "name": "fetchedAt-large-numeric-offset",
+      "manifest": {
+        "schemaVersion": 1,
+        "runId": "run-2024-01-01",
+        "source": "apple-music-replay",
+        "fetchedAt": "2024-01-01T00:00:00+23:59",
+        "years": ["2024"],
+        "snapshots": [
+          { "kind": "month", "id": "2024-03", "status": "absent" }
+        ]
+      },
+      "valid": true
+    },
+    {
+      "name": "fetchedAt-leap-second-utc",
+      "manifest": {
+        "schemaVersion": 1,
+        "runId": "run-2024-01-01",
+        "source": "apple-music-replay",
+        "fetchedAt": "2024-06-30T23:59:60Z",
+        "years": ["2024"],
+        "snapshots": [
+          { "kind": "month", "id": "2024-03", "status": "absent" }
+        ]
+      },
+      "valid": true
+    },
+    {
+      "name": "observedAt-leap-second-offset-adjusted",
+      "manifest": {
+        "schemaVersion": 1,
+        "runId": "run-2024-01-01",
+        "source": "apple-music-replay",
+        "fetchedAt": "2024-07-01T02:30:00+02:00",
+        "years": ["2024"],
+        "snapshots": [
+          {
+            "kind": "month",
+            "id": "2024-03",
+            "status": "absent",
+            "observedAt": "2024-01-01T00:59:60+01:00"
+          }
+        ]
+      },
+      "valid": true
+    },
+    {
+      "name": "root-is-array",
+      "manifest": [],
+      "valid": false
+    },
+    {
+      "name": "root-is-null",
+      "manifest": null,
+      "valid": false
+    },
+    {
+      "name": "root-is-string",
+      "manifest": "nope",
+      "valid": false
+    },
+    {
+      "name": "missing-schemaVersion",
+      "manifest": {
+        "runId": "run-2024-01-01",
+        "source": "apple-music-replay",
+        "fetchedAt": "2024-01-01T00:00:00Z",
+        "years": ["2024"],
+        "snapshots": [
+          {
+            "kind": "year",
+            "id": "2024",
+            "path": "raw/year-2024.json",
+            "status": "present",
+            "payloadSha256": "9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08"
+          }
+        ]
+      },
+      "valid": false
+    },
+    {
+      "name": "missing-runId",
+      "manifest": {
+        "schemaVersion": 1,
+        "source": "apple-music-replay",
+        "fetchedAt": "2024-01-01T00:00:00Z",
+        "years": ["2024"],
+        "snapshots": [
+          { "kind": "month", "id": "2024-03", "status": "absent" }
+        ]
+      },
+      "valid": false
+    },
+    {
+      "name": "missing-source",
+      "manifest": {
+        "schemaVersion": 1,
+        "runId": "run-2024-01-01",
+        "fetchedAt": "2024-01-01T00:00:00Z",
+        "years": ["2024"],
+        "snapshots": [
+          { "kind": "month", "id": "2024-03", "status": "absent" }
+        ]
+      },
+      "valid": false
+    },
+    {
+      "name": "missing-fetchedAt",
+      "manifest": {
+        "schemaVersion": 1,
+        "runId": "run-2024-01-01",
+        "source": "apple-music-replay",
+        "years": ["2024"],
+        "snapshots": [
+          { "kind": "month", "id": "2024-03", "status": "absent" }
+        ]
+      },
+      "valid": false
+    },
+    {
+      "name": "missing-years",
+      "manifest": {
+        "schemaVersion": 1,
+        "runId": "run-2024-01-01",
+        "source": "apple-music-replay",
+        "fetchedAt": "2024-01-01T00:00:00Z",
+        "snapshots": [
+          {
+            "kind": "year",
+            "id": "2024",
+            "path": "raw/year-2024.json",
+            "status": "present",
+            "payloadSha256": "9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08"
+          }
+        ]
+      },
+      "valid": false
+    },
+    {
+      "name": "missing-snapshots",
+      "manifest": {
+        "schemaVersion": 1,
+        "runId": "run-2024-01-01",
+        "source": "apple-music-replay",
+        "fetchedAt": "2024-01-01T00:00:00Z",
+        "years": ["2024"]
+      },
+      "valid": false
+    },
+    {
+      "name": "unknown-top-level-field",
+      "manifest": {
+        "schemaVersion": 1,
+        "runId": "run-2024-01-01",
+        "source": "apple-music-replay",
+        "fetchedAt": "2024-01-01T00:00:00Z",
+        "years": ["2024"],
+        "snapshots": [
+          { "kind": "month", "id": "2024-03", "status": "absent" }
+        ],
+        "extra": "nope"
+      },
+      "valid": false
+    },
+    {
+      "name": "schemaVersion-is-boolean",
+      "manifest": {
+        "schemaVersion": true,
+        "runId": "run-2024-01-01",
+        "source": "apple-music-replay",
+        "fetchedAt": "2024-01-01T00:00:00Z",
+        "years": ["2024"],
+        "snapshots": [
+          { "kind": "month", "id": "2024-03", "status": "absent" }
+        ]
+      },
+      "valid": false
+    },
+    {
+      "name": "schemaVersion-is-string",
+      "manifest": {
+        "schemaVersion": "1",
+        "runId": "run-2024-01-01",
+        "source": "apple-music-replay",
+        "fetchedAt": "2024-01-01T00:00:00Z",
+        "years": ["2024"],
+        "snapshots": [
+          { "kind": "month", "id": "2024-03", "status": "absent" }
+        ]
+      },
+      "valid": false
+    },
+    {
+      "name": "schemaVersion-is-zero",
+      "manifest": {
+        "schemaVersion": 0,
+        "runId": "run-2024-01-01",
+        "source": "apple-music-replay",
+        "fetchedAt": "2024-01-01T00:00:00Z",
+        "years": ["2024"],
+        "snapshots": [
+          { "kind": "month", "id": "2024-03", "status": "absent" }
+        ]
+      },
+      "valid": false
+    },
+    {
+      "name": "schemaVersion-is-fractional",
+      "manifest": {
+        "schemaVersion": 1.5,
+        "runId": "run-2024-01-01",
+        "source": "apple-music-replay",
+        "fetchedAt": "2024-01-01T00:00:00Z",
+        "years": ["2024"],
+        "snapshots": [
+          { "kind": "month", "id": "2024-03", "status": "absent" }
+        ]
+      },
+      "valid": false
+    },
+    {
+      "name": "source-wrong-value",
+      "manifest": {
+        "schemaVersion": 1,
+        "runId": "run-2024-01-01",
+        "source": "spotify",
+        "fetchedAt": "2024-01-01T00:00:00Z",
+        "years": ["2024"],
+        "snapshots": [
+          { "kind": "month", "id": "2024-03", "status": "absent" }
+        ]
+      },
+      "valid": false
+    },
+    {
+      "name": "runId-empty-string",
+      "manifest": {
+        "schemaVersion": 1,
+        "runId": "",
+        "source": "apple-music-replay",
+        "fetchedAt": "2024-01-01T00:00:00Z",
+        "years": ["2024"],
+        "snapshots": [
+          { "kind": "month", "id": "2024-03", "status": "absent" }
+        ]
+      },
+      "valid": false
+    },
+    {
+      "name": "runId-whitespace-only",
+      "manifest": {
+        "schemaVersion": 1,
+        "runId": "   ",
+        "source": "apple-music-replay",
+        "fetchedAt": "2024-01-01T00:00:00Z",
+        "years": ["2024"],
+        "snapshots": [
+          { "kind": "month", "id": "2024-03", "status": "absent" }
+        ]
+      },
+      "valid": false
+    },
+    {
+      "name": "runId-not-a-string",
+      "manifest": {
+        "schemaVersion": 1,
+        "runId": 7,
+        "source": "apple-music-replay",
+        "fetchedAt": "2024-01-01T00:00:00Z",
+        "years": ["2024"],
+        "snapshots": [
+          { "kind": "month", "id": "2024-03", "status": "absent" }
+        ]
+      },
+      "valid": false
+    },
+    {
+      "name": "fetchedAt-date-only",
+      "manifest": {
+        "schemaVersion": 1,
+        "runId": "run-2024-01-01",
+        "source": "apple-music-replay",
+        "fetchedAt": "2024-01-01",
+        "years": ["2024"],
+        "snapshots": [
+          { "kind": "month", "id": "2024-03", "status": "absent" }
+        ]
+      },
+      "valid": false
+    },
+    {
+      "name": "fetchedAt-space-separator",
+      "manifest": {
+        "schemaVersion": 1,
+        "runId": "run-2024-01-01",
+        "source": "apple-music-replay",
+        "fetchedAt": "2024-01-01 00:00:00Z",
+        "years": ["2024"],
+        "snapshots": [
+          { "kind": "month", "id": "2024-03", "status": "absent" }
+        ]
+      },
+      "valid": false
+    },
+    {
+      "name": "fetchedAt-month-13",
+      "manifest": {
+        "schemaVersion": 1,
+        "runId": "run-2024-01-01",
+        "source": "apple-music-replay",
+        "fetchedAt": "2024-13-01T00:00:00Z",
+        "years": ["2024"],
+        "snapshots": [
+          { "kind": "month", "id": "2024-03", "status": "absent" }
+        ]
+      },
+      "valid": false
+    },
+    {
+      "name": "fetchedAt-impossible-day",
+      "manifest": {
+        "schemaVersion": 1,
+        "runId": "run-2024-01-01",
+        "source": "apple-music-replay",
+        "fetchedAt": "2024-02-30T00:00:00Z",
+        "years": ["2024"],
+        "snapshots": [
+          { "kind": "month", "id": "2024-03", "status": "absent" }
+        ]
+      },
+      "valid": false
+    },
+    {
+      "name": "fetchedAt-hour-24",
+      "manifest": {
+        "schemaVersion": 1,
+        "runId": "run-2024-01-01",
+        "source": "apple-music-replay",
+        "fetchedAt": "2024-01-01T24:00:00Z",
+        "years": ["2024"],
+        "snapshots": [
+          { "kind": "month", "id": "2024-03", "status": "absent" }
+        ]
+      },
+      "valid": false
+    },
+    {
+      "name": "fetchedAt-missing-offset",
+      "manifest": {
+        "schemaVersion": 1,
+        "runId": "run-2024-01-01",
+        "source": "apple-music-replay",
+        "fetchedAt": "2024-01-01T00:00:00",
+        "years": ["2024"],
+        "snapshots": [
+          { "kind": "month", "id": "2024-03", "status": "absent" }
+        ]
+      },
+      "valid": false
+    },
+    {
+      "name": "fetchedAt-offset-without-colon",
+      "manifest": {
+        "schemaVersion": 1,
+        "runId": "run-2024-01-01",
+        "source": "apple-music-replay",
+        "fetchedAt": "2024-01-01T00:00:00+0500",
+        "years": ["2024"],
+        "snapshots": [
+          { "kind": "month", "id": "2024-03", "status": "absent" }
+        ]
+      },
+      "valid": false
+    },
+    {
+      "name": "fetchedAt-offset-hour-24",
+      "manifest": {
+        "schemaVersion": 1,
+        "runId": "run-2024-01-01",
+        "source": "apple-music-replay",
+        "fetchedAt": "2024-01-01T00:00:00+24:00",
+        "years": ["2024"],
+        "snapshots": [
+          { "kind": "month", "id": "2024-03", "status": "absent" }
+        ]
+      },
+      "valid": false
+    },
+    {
+      "name": "fetchedAt-empty-fraction",
+      "manifest": {
+        "schemaVersion": 1,
+        "runId": "run-2024-01-01",
+        "source": "apple-music-replay",
+        "fetchedAt": "2024-01-01T00:00:00.Z",
+        "years": ["2024"],
+        "snapshots": [
+          { "kind": "month", "id": "2024-03", "status": "absent" }
+        ]
+      },
+      "valid": false
+    },
+    {
+      "name": "fetchedAt-not-a-string",
+      "manifest": {
+        "schemaVersion": 1,
+        "runId": "run-2024-01-01",
+        "source": "apple-music-replay",
+        "fetchedAt": 20240101,
+        "years": ["2024"],
+        "snapshots": [
+          { "kind": "month", "id": "2024-03", "status": "absent" }
+        ]
+      },
+      "valid": false
+    },
+    {
+      "name": "fetchedAt-non-ascii-digits",
+      "manifest": {
+        "schemaVersion": 1,
+        "runId": "run-2024-01-01",
+        "source": "apple-music-replay",
+        "fetchedAt": "٢٠٢٤-٠١-٠١T00:00:00Z",
+        "years": ["2024"],
+        "snapshots": [
+          { "kind": "month", "id": "2024-03", "status": "absent" }
+        ]
+      },
+      "valid": false
+    },
+    {
+      "name": "observedAt-date-only",
+      "manifest": {
+        "schemaVersion": 1,
+        "runId": "run-2024-01-01",
+        "source": "apple-music-replay",
+        "fetchedAt": "2024-01-01T00:00:00Z",
+        "years": ["2024"],
+        "snapshots": [
+          {
+            "kind": "month",
+            "id": "2024-03",
+            "status": "absent",
+            "observedAt": "2024-01-01"
+          }
+        ]
+      },
+      "valid": false
+    },
+    {
+      "name": "observedAt-second-60-off-utc-rollover",
+      "manifest": {
+        "schemaVersion": 1,
+        "runId": "run-2024-01-01",
+        "source": "apple-music-replay",
+        "fetchedAt": "2024-01-01T00:00:00Z",
+        "years": ["2024"],
+        "snapshots": [
+          {
+            "kind": "month",
+            "id": "2024-03",
+            "status": "absent",
+            "observedAt": "2024-01-01T00:00:60Z"
+          }
+        ]
+      },
+      "valid": false
+    },
+    {
+      "name": "years-not-an-array",
+      "manifest": {
+        "schemaVersion": 1,
+        "runId": "run-2024-01-01",
+        "source": "apple-music-replay",
+        "fetchedAt": "2024-01-01T00:00:00Z",
+        "years": "2024",
+        "snapshots": [
+          { "kind": "month", "id": "2024-03", "status": "absent" }
+        ]
+      },
+      "valid": false
+    },
+    {
+      "name": "years-item-not-a-string",
+      "manifest": {
+        "schemaVersion": 1,
+        "runId": "run-2024-01-01",
+        "source": "apple-music-replay",
+        "fetchedAt": "2024-01-01T00:00:00Z",
+        "years": [2024],
+        "snapshots": [
+          { "kind": "month", "id": "2024-03", "status": "absent" }
+        ]
+      },
+      "valid": false
+    },
+    {
+      "name": "years-item-wrong-shape",
+      "manifest": {
+        "schemaVersion": 1,
+        "runId": "run-2024-01-01",
+        "source": "apple-music-replay",
+        "fetchedAt": "2024-01-01T00:00:00Z",
+        "years": ["24", "20x4"],
+        "snapshots": [
+          { "kind": "month", "id": "2024-03", "status": "absent" }
+        ]
+      },
+      "valid": false
+    },
+    {
+      "name": "years-item-trailing-newline",
+      "manifest": {
+        "schemaVersion": 1,
+        "runId": "run-2024-01-01",
+        "source": "apple-music-replay",
+        "fetchedAt": "2024-01-01T00:00:00Z",
+        "years": ["2024\n"],
+        "snapshots": [
+          { "kind": "month", "id": "2024-03", "status": "absent" }
+        ]
+      },
+      "valid": false
+    },
+    {
+      "name": "years-duplicates",
+      "manifest": {
+        "schemaVersion": 1,
+        "runId": "run-2024-01-01",
+        "source": "apple-music-replay",
+        "fetchedAt": "2024-01-01T00:00:00Z",
+        "years": ["2024", "2023", "2024"],
+        "snapshots": [
+          { "kind": "month", "id": "2024-03", "status": "absent" }
+        ]
+      },
+      "valid": false
+    },
+    {
+      "name": "years-non-ascii-digits",
+      "manifest": {
+        "schemaVersion": 1,
+        "runId": "run-2024-01-01",
+        "source": "apple-music-replay",
+        "fetchedAt": "2024-01-01T00:00:00Z",
+        "years": ["٢٠٢٤"],
+        "snapshots": [
+          { "kind": "month", "id": "2024-03", "status": "absent" }
+        ]
+      },
+      "valid": false
+    },
+    {
+      "name": "snapshots-empty-array",
+      "manifest": {
+        "schemaVersion": 1,
+        "runId": "run-2024-01-01",
+        "source": "apple-music-replay",
+        "fetchedAt": "2024-01-01T00:00:00Z",
+        "years": ["2024"],
+        "snapshots": []
+      },
+      "valid": false
+    },
+    {
+      "name": "snapshots-not-an-array",
+      "manifest": {
+        "schemaVersion": 1,
+        "runId": "run-2024-01-01",
+        "source": "apple-music-replay",
+        "fetchedAt": "2024-01-01T00:00:00Z",
+        "years": ["2024"],
+        "snapshots": {}
+      },
+      "valid": false
+    },
+    {
+      "name": "snapshot-entry-not-an-object",
+      "manifest": {
+        "schemaVersion": 1,
+        "runId": "run-2024-01-01",
+        "source": "apple-music-replay",
+        "fetchedAt": "2024-01-01T00:00:00Z",
+        "years": ["2024"],
+        "snapshots": ["x"]
+      },
+      "valid": false
+    },
+    {
+      "name": "snapshot-missing-kind",
+      "manifest": {
+        "schemaVersion": 1,
+        "runId": "run-2024-01-01",
+        "source": "apple-music-replay",
+        "fetchedAt": "2024-01-01T00:00:00Z",
+        "years": ["2024"],
+        "snapshots": [
+          {
+            "id": "2024",
+            "path": "raw/year-2024.json",
+            "status": "present",
+            "payloadSha256": "9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08"
+          }
+        ]
+      },
+      "valid": false
+    },
+    {
+      "name": "snapshot-missing-id",
+      "manifest": {
+        "schemaVersion": 1,
+        "runId": "run-2024-01-01",
+        "source": "apple-music-replay",
+        "fetchedAt": "2024-01-01T00:00:00Z",
+        "years": ["2024"],
+        "snapshots": [
+          {
+            "kind": "year",
+            "path": "raw/year-2024.json",
+            "status": "present",
+            "payloadSha256": "9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08"
+          }
+        ]
+      },
+      "valid": false
+    },
+    {
+      "name": "snapshot-missing-status",
+      "manifest": {
+        "schemaVersion": 1,
+        "runId": "run-2024-01-01",
+        "source": "apple-music-replay",
+        "fetchedAt": "2024-01-01T00:00:00Z",
+        "years": ["2024"],
+        "snapshots": [
+          {
+            "kind": "year",
+            "id": "2024",
+            "path": "raw/year-2024.json",
+            "payloadSha256": "9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08"
+          }
+        ]
+      },
+      "valid": false
+    },
+    {
+      "name": "snapshot-unknown-field",
+      "manifest": {
+        "schemaVersion": 1,
+        "runId": "run-2024-01-01",
+        "source": "apple-music-replay",
+        "fetchedAt": "2024-01-01T00:00:00Z",
+        "years": ["2024"],
+        "snapshots": [
+          {
+            "kind": "year",
+            "id": "2024",
+            "path": "raw/year-2024.json",
+            "status": "present",
+            "payloadSha256": "9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08",
+            "payloadHash": "9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08"
+          }
+        ]
+      },
+      "valid": false
+    },
+    {
+      "name": "snapshot-kind-unknown",
+      "manifest": {
+        "schemaVersion": 1,
+        "runId": "run-2024-01-01",
+        "source": "apple-music-replay",
+        "fetchedAt": "2024-01-01T00:00:00Z",
+        "years": ["2024"],
+        "snapshots": [
+          {
+            "kind": "day",
+            "id": "2024-01-01",
+            "path": "raw/day-2024-01-01.json",
+            "status": "present",
+            "payloadSha256": "9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08"
+          }
+        ]
+      },
+      "valid": false
+    },
+    {
+      "name": "snapshot-kind-not-a-string",
+      "manifest": {
+        "schemaVersion": 1,
+        "runId": "run-2024-01-01",
+        "source": "apple-music-replay",
+        "fetchedAt": "2024-01-01T00:00:00Z",
+        "years": ["2024"],
+        "snapshots": [
+          {
+            "kind": 2024,
+            "id": "2024",
+            "path": "raw/year-2024.json",
+            "status": "present",
+            "payloadSha256": "9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08"
+          }
+        ]
+      },
+      "valid": false
+    },
+    {
+      "name": "snapshot-id-whitespace-only",
+      "manifest": {
+        "schemaVersion": 1,
+        "runId": "run-2024-01-01",
+        "source": "apple-music-replay",
+        "fetchedAt": "2024-01-01T00:00:00Z",
+        "years": ["2024"],
+        "snapshots": [
+          { "kind": "year", "id": " ", "status": "absent" }
+        ]
+      },
+      "valid": false
+    },
+    {
+      "name": "snapshot-id-not-a-string",
+      "manifest": {
+        "schemaVersion": 1,
+        "runId": "run-2024-01-01",
+        "source": "apple-music-replay",
+        "fetchedAt": "2024-01-01T00:00:00Z",
+        "years": ["2024"],
+        "snapshots": [
+          { "kind": "year", "id": 7, "status": "absent" }
+        ]
+      },
+      "valid": false
+    },
+    {
+      "name": "snapshot-status-unknown",
+      "manifest": {
+        "schemaVersion": 1,
+        "runId": "run-2024-01-01",
+        "source": "apple-music-replay",
+        "fetchedAt": "2024-01-01T00:00:00Z",
+        "years": ["2024"],
+        "snapshots": [
+          { "kind": "year", "id": "2024", "status": "missing" }
+        ]
+      },
+      "valid": false
+    },
+    {
+      "name": "snapshot-status-unknown-with-path",
+      "manifest": {
+        "schemaVersion": 1,
+        "runId": "run-2024-01-01",
+        "source": "apple-music-replay",
+        "fetchedAt": "2024-01-01T00:00:00Z",
+        "years": ["2024"],
+        "snapshots": [
+          {
+            "kind": "year",
+            "id": "2024",
+            "path": "raw/year-2024.json",
+            "status": "missing"
+          }
+        ]
+      },
+      "valid": false
+    },
+    {
+      "name": "present-missing-path",
+      "manifest": {
+        "schemaVersion": 1,
+        "runId": "run-2024-01-01",
+        "source": "apple-music-replay",
+        "fetchedAt": "2024-01-01T00:00:00Z",
+        "years": ["2024"],
+        "snapshots": [
+          {
+            "kind": "year",
+            "id": "2024",
+            "status": "present",
+            "payloadSha256": "9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08"
+          }
+        ]
+      },
+      "valid": false
+    },
+    {
+      "name": "present-missing-hash",
+      "manifest": {
+        "schemaVersion": 1,
+        "runId": "run-2024-01-01",
+        "source": "apple-music-replay",
+        "fetchedAt": "2024-01-01T00:00:00Z",
+        "years": ["2024"],
+        "snapshots": [
+          {
+            "kind": "year",
+            "id": "2024",
+            "path": "raw/year-2024.json",
+            "status": "present"
+          }
+        ]
+      },
+      "valid": false
+    },
+    {
+      "name": "present-path-absolute",
+      "manifest": {
+        "schemaVersion": 1,
+        "runId": "run-2024-01-01",
+        "source": "apple-music-replay",
+        "fetchedAt": "2024-01-01T00:00:00Z",
+        "years": ["2024"],
+        "snapshots": [
+          {
+            "kind": "year",
+            "id": "2024",
+            "path": "/etc/passwd",
+            "status": "present",
+            "payloadSha256": "9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08"
+          }
+        ]
+      },
+      "valid": false
+    },
+    {
+      "name": "present-path-without-raw-directory",
+      "manifest": {
+        "schemaVersion": 1,
+        "runId": "run-2024-01-01",
+        "source": "apple-music-replay",
+        "fetchedAt": "2024-01-01T00:00:00Z",
+        "years": ["2024"],
+        "snapshots": [
+          {
+            "kind": "year",
+            "id": "2024",
+            "path": "year-2024.json",
+            "status": "present",
+            "payloadSha256": "9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08"
+          }
+        ]
+      },
+      "valid": false
+    },
+    {
+      "name": "present-path-traversal",
+      "manifest": {
+        "schemaVersion": 1,
+        "runId": "run-2024-01-01",
+        "source": "apple-music-replay",
+        "fetchedAt": "2024-01-01T00:00:00Z",
+        "years": ["2024"],
+        "snapshots": [
+          {
+            "kind": "year",
+            "id": "2024",
+            "path": "raw/../../etc/passwd",
+            "status": "present",
+            "payloadSha256": "9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08"
+          }
+        ]
+      },
+      "valid": false
+    },
+    {
+      "name": "present-path-dotdot-after-raw",
+      "manifest": {
+        "schemaVersion": 1,
+        "runId": "run-2024-01-01",
+        "source": "apple-music-replay",
+        "fetchedAt": "2024-01-01T00:00:00Z",
+        "years": ["2024"],
+        "snapshots": [
+          {
+            "kind": "year",
+            "id": "2024",
+            "path": "raw/../secret.json",
+            "status": "present",
+            "payloadSha256": "9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08"
+          }
+        ]
+      },
+      "valid": false
+    },
+    {
+      "name": "present-path-embedded-dotdot",
+      "manifest": {
+        "schemaVersion": 1,
+        "runId": "run-2024-01-01",
+        "source": "apple-music-replay",
+        "fetchedAt": "2024-01-01T00:00:00Z",
+        "years": ["2024"],
+        "snapshots": [
+          {
+            "kind": "year",
+            "id": "2024",
+            "path": "raw/year..2024.json",
+            "status": "present",
+            "payloadSha256": "9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08"
+          }
+        ]
+      },
+      "valid": false
+    },
+    {
+      "name": "present-path-dotdot-only",
+      "manifest": {
+        "schemaVersion": 1,
+        "runId": "run-2024-01-01",
+        "source": "apple-music-replay",
+        "fetchedAt": "2024-01-01T00:00:00Z",
+        "years": ["2024"],
+        "snapshots": [
+          {
+            "kind": "year",
+            "id": "2024",
+            "path": "raw/..",
+            "status": "present",
+            "payloadSha256": "9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08"
+          }
+        ]
+      },
+      "valid": false
+    },
+    {
+      "name": "present-path-empty",
+      "manifest": {
+        "schemaVersion": 1,
+        "runId": "run-2024-01-01",
+        "source": "apple-music-replay",
+        "fetchedAt": "2024-01-01T00:00:00Z",
+        "years": ["2024"],
+        "snapshots": [
+          {
+            "kind": "year",
+            "id": "2024",
+            "path": "",
+            "status": "present",
+            "payloadSha256": "9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08"
+          }
+        ]
+      },
+      "valid": false
+    },
+    {
+      "name": "present-path-trailing-newline",
+      "manifest": {
+        "schemaVersion": 1,
+        "runId": "run-2024-01-01",
+        "source": "apple-music-replay",
+        "fetchedAt": "2024-01-01T00:00:00Z",
+        "years": ["2024"],
+        "snapshots": [
+          {
+            "kind": "year",
+            "id": "2024",
+            "path": "raw/year-2024.json\n",
+            "status": "present",
+            "payloadSha256": "9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08"
+          }
+        ]
+      },
+      "valid": false
+    },
+    {
+      "name": "present-hash-uppercase",
+      "manifest": {
+        "schemaVersion": 1,
+        "runId": "run-2024-01-01",
+        "source": "apple-music-replay",
+        "fetchedAt": "2024-01-01T00:00:00Z",
+        "years": ["2024"],
+        "snapshots": [
+          {
+            "kind": "year",
+            "id": "2024",
+            "path": "raw/year-2024.json",
+            "status": "present",
+            "payloadSha256": "9F86D081884C7D659A2FEAA0C55AD015A3BF4F1B2B0B822CD15D6C15B0F00A08"
+          }
+        ]
+      },
+      "valid": false
+    },
+    {
+      "name": "present-hash-short",
+      "manifest": {
+        "schemaVersion": 1,
+        "runId": "run-2024-01-01",
+        "source": "apple-music-replay",
+        "fetchedAt": "2024-01-01T00:00:00Z",
+        "years": ["2024"],
+        "snapshots": [
+          {
+            "kind": "year",
+            "id": "2024",
+            "path": "raw/year-2024.json",
+            "status": "present",
+            "payloadSha256": "9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a0"
+          }
+        ]
+      },
+      "valid": false
+    },
+    {
+      "name": "present-hash-long",
+      "manifest": {
+        "schemaVersion": 1,
+        "runId": "run-2024-01-01",
+        "source": "apple-music-replay",
+        "fetchedAt": "2024-01-01T00:00:00Z",
+        "years": ["2024"],
+        "snapshots": [
+          {
+            "kind": "year",
+            "id": "2024",
+            "path": "raw/year-2024.json",
+            "status": "present",
+            "payloadSha256": "9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08aa"
+          }
+        ]
+      },
+      "valid": false
+    },
+    {
+      "name": "present-hash-non-hex",
+      "manifest": {
+        "schemaVersion": 1,
+        "runId": "run-2024-01-01",
+        "source": "apple-music-replay",
+        "fetchedAt": "2024-01-01T00:00:00Z",
+        "years": ["2024"],
+        "snapshots": [
+          {
+            "kind": "year",
+            "id": "2024",
+            "path": "raw/year-2024.json",
+            "status": "present",
+            "payloadSha256": "gggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggg"
+          }
+        ]
+      },
+      "valid": false
+    },
+    {
+      "name": "present-hash-numeric",
+      "manifest": {
+        "schemaVersion": 1,
+        "runId": "run-2024-01-01",
+        "source": "apple-music-replay",
+        "fetchedAt": "2024-01-01T00:00:00Z",
+        "years": ["2024"],
+        "snapshots": [
+          {
+            "kind": "year",
+            "id": "2024",
+            "path": "raw/year-2024.json",
+            "status": "present",
+            "payloadSha256": 1e64
+          }
+        ]
+      },
+      "valid": false
+    },
+    {
+      "name": "present-hash-empty-string",
+      "manifest": {
+        "schemaVersion": 1,
+        "runId": "run-2024-01-01",
+        "source": "apple-music-replay",
+        "fetchedAt": "2024-01-01T00:00:00Z",
+        "years": ["2024"],
+        "snapshots": [
+          {
+            "kind": "year",
+            "id": "2024",
+            "path": "raw/year-2024.json",
+            "status": "present",
+            "payloadSha256": ""
+          }
+        ]
+      },
+      "valid": false
+    },
+    {
+      "name": "present-hash-trailing-newline",
+      "manifest": {
+        "schemaVersion": 1,
+        "runId": "run-2024-01-01",
+        "source": "apple-music-replay",
+        "fetchedAt": "2024-01-01T00:00:00Z",
+        "years": ["2024"],
+        "snapshots": [
+          {
+            "kind": "year",
+            "id": "2024",
+            "path": "raw/year-2024.json",
+            "status": "present",
+            "payloadSha256": "9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08\n"
+          }
+        ]
+      },
+      "valid": false
+    },
+    {
+      "name": "absent-with-path",
+      "manifest": {
+        "schemaVersion": 1,
+        "runId": "run-2024-01-01",
+        "source": "apple-music-replay",
+        "fetchedAt": "2024-01-01T00:00:00Z",
+        "years": ["2024"],
+        "snapshots": [
+          {
+            "kind": "month",
+            "id": "2024-02",
+            "path": "raw/month-2024-02.json",
+            "status": "absent"
+          }
+        ]
+      },
+      "valid": false
+    },
+    {
+      "name": "absent-with-hash",
+      "manifest": {
+        "schemaVersion": 1,
+        "runId": "run-2024-01-01",
+        "source": "apple-music-replay",
+        "fetchedAt": "2024-01-01T00:00:00Z",
+        "years": ["2024"],
+        "snapshots": [
+          {
+            "kind": "month",
+            "id": "2024-02",
+            "status": "absent",
+            "payloadSha256": "9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08"
+          }
+        ]
+      },
+      "valid": false
+    },
+    {
+      "name": "absent-with-path-and-hash",
+      "manifest": {
+        "schemaVersion": 1,
+        "runId": "run-2024-01-01",
+        "source": "apple-music-replay",
+        "fetchedAt": "2024-01-01T00:00:00Z",
+        "years": ["2024"],
+        "snapshots": [
+          {
+            "kind": "month",
+            "id": "2024-02",
+            "path": "raw/month-2024-02.json",
+            "status": "absent",
+            "payloadSha256": "9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08"
+          }
+        ]
+      },
+      "valid": false
+    },
+    {
+      "name": "snapshots-exact-duplicate",
+      "manifest": {
+        "schemaVersion": 1,
+        "runId": "run-2024-01-01",
+        "source": "apple-music-replay",
+        "fetchedAt": "2024-01-01T00:00:00Z",
+        "years": ["2024"],
+        "snapshots": [
+          {
+            "kind": "year",
+            "id": "2024",
+            "path": "raw/year-2024.json",
+            "status": "present",
+            "payloadSha256": "9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08"
+          },
+          {
+            "kind": "year",
+            "id": "2024",
+            "path": "raw/year-2024.json",
+            "status": "present",
+            "payloadSha256": "9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08"
+          }
+        ]
+      },
+      "valid": false
+    },
+    {
+      "name": "httpStatus-negative",
+      "manifest": {
+        "schemaVersion": 1,
+        "runId": "run-2024-01-01",
+        "source": "apple-music-replay",
+        "fetchedAt": "2024-01-01T00:00:00Z",
+        "years": ["2024"],
+        "snapshots": [
+          { "kind": "month", "id": "2024-02", "status": "absent", "httpStatus": -1 }
+        ]
+      },
+      "valid": false
+    },
+    {
+      "name": "httpStatus-boolean",
+      "manifest": {
+        "schemaVersion": 1,
+        "runId": "run-2024-01-01",
+        "source": "apple-music-replay",
+        "fetchedAt": "2024-01-01T00:00:00Z",
+        "years": ["2024"],
+        "snapshots": [
+          { "kind": "month", "id": "2024-02", "status": "absent", "httpStatus": true }
+        ]
+      },
+      "valid": false
+    },
+    {
+      "name": "httpStatus-string",
+      "manifest": {
+        "schemaVersion": 1,
+        "runId": "run-2024-01-01",
+        "source": "apple-music-replay",
+        "fetchedAt": "2024-01-01T00:00:00Z",
+        "years": ["2024"],
+        "snapshots": [
+          { "kind": "month", "id": "2024-02", "status": "absent", "httpStatus": "200" }
+        ]
+      },
+      "valid": false
+    },
+    {
+      "name": "httpStatus-fractional",
+      "manifest": {
+        "schemaVersion": 1,
+        "runId": "run-2024-01-01",
+        "source": "apple-music-replay",
+        "fetchedAt": "2024-01-01T00:00:00Z",
+        "years": ["2024"],
+        "snapshots": [
+          { "kind": "month", "id": "2024-02", "status": "absent", "httpStatus": 1.5 }
+        ]
+      },
+      "valid": false
+    },
+    {
+      "name": "coverage-not-an-object",
+      "manifest": {
+        "schemaVersion": 1,
+        "runId": "run-2024-01-01",
+        "source": "apple-music-replay",
+        "fetchedAt": "2024-01-01T00:00:00Z",
+        "years": ["2024"],
+        "snapshots": [
+          { "kind": "month", "id": "2024-03", "status": "absent" }
+        ],
+        "coverage": "everything"
+      },
+      "valid": false
+    },
+    {
+      "name": "coverage-array",
+      "manifest": {
+        "schemaVersion": 1,
+        "runId": "run-2024-01-01",
+        "source": "apple-music-replay",
+        "fetchedAt": "2024-01-01T00:00:00Z",
+        "years": ["2024"],
+        "snapshots": [
+          { "kind": "month", "id": "2024-03", "status": "absent" }
+        ],
+        "coverage": ["all"]
+      },
+      "valid": false
+    },
+    {
+      "name": "coverage-null",
+      "manifest": {
+        "schemaVersion": 1,
+        "runId": "run-2024-01-01",
+        "source": "apple-music-replay",
+        "fetchedAt": "2024-01-01T00:00:00Z",
+        "years": ["2024"],
+        "snapshots": [
+          { "kind": "month", "id": "2024-03", "status": "absent" }
+        ],
+        "coverage": null
+      },
+      "valid": false
+    },
+    {
+      "name": "warnings-not-an-array",
+      "manifest": {
+        "schemaVersion": 1,
+        "runId": "run-2024-01-01",
+        "source": "apple-music-replay",
+        "fetchedAt": "2024-01-01T00:00:00Z",
+        "years": ["2024"],
+        "snapshots": [
+          { "kind": "month", "id": "2024-03", "status": "absent" }
+        ],
+        "warnings": "none"
+      },
+      "valid": false
+    },
+    {
+      "name": "warnings-item-not-a-string",
+      "manifest": {
+        "schemaVersion": 1,
+        "runId": "run-2024-01-01",
+        "source": "apple-music-replay",
+        "fetchedAt": "2024-01-01T00:00:00Z",
+        "years": ["2024"],
+        "snapshots": [
+          { "kind": "month", "id": "2024-03", "status": "absent" }
+        ],
+        "warnings": ["ok", 1]
+      },
+      "valid": false
+    }
+  ]
+}

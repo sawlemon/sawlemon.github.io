@@ -18,11 +18,23 @@ import argparse
 import json
 import re
 import sys
+from datetime import datetime
 from urllib.parse import urlparse
 
+# JSON Schema ``pattern`` uses the ECMA-262 dialect, where ``$`` anchors at
+# the end of input only (Python's ``$`` would also match before a trailing
+# newline, hence ``\Z``) and ``\d`` means exactly ASCII 0-9 (Python's ``\d``
+# would also match Unicode decimal digits). These patterns use ``[0-9]`` to
+# stay exactly in parity with the declared schema patterns.
 ISO_DATE_RE = re.compile(r"^\d{4}-\d{2}-\d{2}$")
-YEAR_KEY_RE = re.compile(r"^\d{4}$")
-SHA256_RE = re.compile(r"^[0-9a-f]{64}$")
+YEAR_KEY_RE = re.compile(r"^[0-9]{4}\Z")
+SHA256_RE = re.compile(r"^[0-9a-f]{64}\Z")
+RAW_PATH_RE = re.compile(r"^raw/[^/].*\Z")
+RFC3339_DATETIME_RE = re.compile(
+    r"^(?P<date>[0-9]{4}-[0-9]{2}-[0-9]{2})[Tt]"
+    r"(?P<hour>[0-9]{2}):(?P<minute>[0-9]{2}):(?P<second>[0-9]{2})(?P<fraction>\.[0-9]+)?"
+    r"(?P<offset>[Zz]|[+-][0-9]{2}:[0-9]{2})\Z"
+)
 
 MONTH_LABELS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
 
@@ -40,6 +52,48 @@ def _is_int(value):
 
 def _is_nonempty_str(value):
     return isinstance(value, str) and value.strip() != ""
+
+
+def _is_rfc3339_datetime(value):
+    """True when value is an RFC 3339 date-time (JSON Schema format: date-time).
+
+    Standard library only: a structural regex plus calendar and clock range
+    checks, so it behaves identically on every supported Python. The RFC 3339
+    ABNF requires the T separator and a colon-separated numeric offset (the
+    spec's NOTE also permits a space separator by prior agreement; it is not
+    accepted here, matching the contract's declared pattern).
+
+    A second value of 60 is the RFC 3339 leap second, which is only inserted
+    at 23:59:60 UTC, so the offset-adjusted time must land there (matching
+    the contract's ``format: date-time`` implementation).
+    """
+    if not isinstance(value, str):
+        return False
+    match = RFC3339_DATETIME_RE.match(value)
+    if not match:
+        return False
+    try:
+        year, month, day = (int(part) for part in match.group("date").split("-"))
+        datetime(year, month, day)
+    except ValueError:
+        return False
+    hour, minute, second = int(match.group("hour")), int(match.group("minute")), int(match.group("second"))
+    if hour > 23 or minute > 59 or second > 60:
+        return False
+    offset = match.group("offset")
+    if offset in ("Z", "z"):
+        offset_hour, offset_minute = 0, 0
+    else:
+        offset_hour, offset_minute = int(offset[1:3]), int(offset[4:6])
+        if offset_hour > 23 or offset_minute > 59:
+            return False
+    if second < 60:
+        return True
+    # second 60: only valid when the offset-adjusted UTC time is 23:59:60.
+    sign = 1 if offset[0] == "+" else -1
+    utc_minute = minute - sign * offset_minute
+    utc_hour = hour - sign * offset_hour - (1 if utc_minute < 0 else 0)
+    return utc_hour in (23, -1) and utc_minute in (59, -1)
 
 
 def _url_allowed(url, allowed):
@@ -191,30 +245,88 @@ def validate_music(data):
     return errors
 
 
+MANIFEST_FIELDS = frozenset(
+    {"schemaVersion", "runId", "source", "fetchedAt", "years", "snapshots", "coverage", "warnings"}
+)
+SNAPSHOT_FIELDS = frozenset({"kind", "id", "path", "status", "httpStatus", "observedAt", "payloadSha256"})
+
+
+def _raw_path_error(rel):
+    """Return a message when rel is not a safe relative raw/ path, else None."""
+    if not isinstance(rel, str) or not RAW_PATH_RE.match(rel):
+        return "path must be a relative raw/ path"
+    if ".." in rel:
+        return "path must not contain path traversal"
+    return None
+
+
 def validate_raw_manifest(manifest):
-    """Validate a snapshot manifest; returns a list of error diagnostics."""
+    """Validate a snapshot manifest; returns a list of error diagnostics.
+
+    Authoritative implementation of the contract declared in
+    scripts/music-pipeline/contracts/raw-snapshot.schema.json:
+
+    - exact top-level field set (``additionalProperties: false``) with the
+      required fields and types; ``schemaVersion`` must be the integer 1
+      (never a boolean or float) and ``source`` exactly
+      ``apple-music-replay``;
+    - ``fetchedAt`` and per-entry ``observedAt`` must be RFC 3339 date-time
+      strings (the schema's ``format: date-time``);
+    - ``years`` is a required array of four-digit strings; duplicates are
+      rejected, matching the schema's ``uniqueItems``;
+    - ``snapshots`` is a required nonempty array with an exact per-entry
+      field set and unique ``(kind, id)`` pairs across entries (the schema's
+      ``uniqueItems`` only rejects exact duplicates; JSON Schema cannot
+      express uniqueness of a projected key, so the Python validator owns
+      the cross-entry check). Absent entries are pathless: they carry no
+      ``path`` and no ``payloadSha256`` — the resource does not exist, so
+      there is nothing to load or hash. Present entries require a safe
+      relative ``raw/`` path and a string, lowercase, 64-hex SHA-256 payload
+      hash (a 64-digit integer is not a hash);
+    - ``httpStatus``, when present, is a nonnegative integer (never
+      boolean); ``coverage``, when present, is an object; ``warnings``,
+      when present, is an array of strings.
+    """
     errors = []
     if not isinstance(manifest, dict):
         _error(errors, "manifest-shape", "$", "manifest must be an object")
         return errors
-    if manifest.get("schemaVersion") != 1:
-        _error(errors, "manifest-version", ".schemaVersion", "schemaVersion must be 1")
+
+    for key in sorted(set(manifest) - MANIFEST_FIELDS):
+        _error(errors, "manifest-field", f".{key}", "unknown manifest field")
+
+    version = manifest.get("schemaVersion")
+    if not _is_int(version) or version != 1:
+        _error(errors, "manifest-version", ".schemaVersion", "schemaVersion must be the integer 1")
     if manifest.get("source") != "apple-music-replay":
         _error(errors, "manifest-source", ".source", "source must be apple-music-replay")
     if not _is_nonempty_str(manifest.get("runId")):
         _error(errors, "manifest-run-id", ".runId", "runId must be a nonempty string")
-    if not _is_nonempty_str(manifest.get("fetchedAt")):
-        _error(errors, "manifest-fetched-at", ".fetchedAt", "fetchedAt must be a nonempty string")
+    if not _is_rfc3339_datetime(manifest.get("fetchedAt")):
+        _error(errors, "manifest-fetched-at", ".fetchedAt", "fetchedAt must be an RFC 3339 date-time string")
+
+    years = manifest.get("years")
+    if not isinstance(years, list) or any(not isinstance(y, str) or not YEAR_KEY_RE.match(y) for y in years):
+        _error(errors, "manifest-years", ".years", "years must be an array of four-digit year strings")
+    else:
+        seen_years = set()
+        for i, year in enumerate(years):
+            if year in seen_years:
+                _error(errors, "manifest-years-duplicate", f".years[{i}]", f"year {year} appears more than once")
+            seen_years.add(year)
+
     snapshots = manifest.get("snapshots")
     if not isinstance(snapshots, list) or not snapshots:
         _error(errors, "manifest-snapshots", ".snapshots", "snapshots must be a nonempty list")
-        return errors
+        snapshots = []
     seen_ids = set()
     for i, entry in enumerate(snapshots):
         path = f".snapshots[{i}]"
         if not isinstance(entry, dict):
             _error(errors, "snapshot-shape", path, "snapshot entry must be an object")
             continue
+        for key in sorted(set(entry) - SNAPSHOT_FIELDS):
+            _error(errors, "snapshot-field", f"{path}.{key}", "unknown snapshot field")
         if entry.get("kind") not in ("year", "month"):
             _error(errors, "snapshot-kind", f"{path}.kind", "kind must be 'year' or 'month'")
         if not _is_nonempty_str(entry.get("id")):
@@ -224,13 +336,41 @@ def validate_raw_manifest(manifest):
             if key in seen_ids:
                 _error(errors, "snapshot-duplicate", path, "kind/id appears more than once")
             seen_ids.add(key)
-        rel = entry.get("path")
-        if not _is_nonempty_str(rel) or not rel.startswith("raw/") or ".." in rel:
-            _error(errors, "snapshot-path", f"{path}.path", "path must be a relative raw/ path without traversal")
-        if entry.get("status") not in ("present", "absent"):
+        status = entry.get("status")
+        if status not in ("present", "absent"):
             _error(errors, "snapshot-status", f"{path}.status", "status must be 'present' or 'absent'")
-        elif entry["status"] == "present" and not SHA256_RE.match(str(entry.get("payloadSha256", ""))):
-            _error(errors, "snapshot-hash", f"{path}.payloadSha256", "present payloads need a sha256 hash")
+        elif status == "present":
+            path_error = _raw_path_error(entry.get("path"))
+            if path_error:
+                _error(errors, "snapshot-path", f"{path}.path", path_error)
+            digest = entry.get("payloadSha256")
+            if not isinstance(digest, str) or not SHA256_RE.match(digest):
+                _error(
+                    errors,
+                    "snapshot-hash",
+                    f"{path}.payloadSha256",
+                    "present payloads need a lowercase 64-hex sha256 hash string",
+                )
+        else:
+            # Absent entries are pathless: a path or hash on them is a
+            # contradiction, not metadata.
+            if "path" in entry:
+                _error(errors, "snapshot-absent-path", f"{path}.path", "absent entries must not have a path")
+            if "payloadSha256" in entry:
+                _error(errors, "snapshot-absent-hash", f"{path}.payloadSha256", "absent entries must not have a payloadSha256")
+        if "httpStatus" in entry:
+            http_status = entry["httpStatus"]
+            if not _is_int(http_status) or http_status < 0:
+                _error(errors, "snapshot-http-status", f"{path}.httpStatus", "httpStatus must be a nonnegative integer")
+        if "observedAt" in entry and not _is_rfc3339_datetime(entry["observedAt"]):
+            _error(errors, "snapshot-observed-at", f"{path}.observedAt", "observedAt must be an RFC 3339 date-time string")
+
+    if "coverage" in manifest and not isinstance(manifest["coverage"], dict):
+        _error(errors, "manifest-coverage", ".coverage", "coverage must be an object")
+    if "warnings" in manifest:
+        warnings = manifest["warnings"]
+        if not isinstance(warnings, list) or any(not isinstance(w, str) for w in warnings):
+            _error(errors, "manifest-warnings", ".warnings", "warnings must be an array of strings")
     return errors
 
 

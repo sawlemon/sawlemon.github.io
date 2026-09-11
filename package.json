@@ -8,6 +8,7 @@
     "build": "astro build",
     "preview": "astro preview",
     "check": "astro check",
+    "test:music": "node --test 'tests/music/node/*.test.mjs' && python3 -m unittest discover -s tests/music/python",
     "music:refresh": "node scripts/music-pipeline/cli.mjs",
     "books:build": "python3 scripts/build-books-data.py"
   },
@@ -23,6 +24,8 @@
   },
   "devDependencies": {
     "@astrojs/check": "^0.9.10",
+    "ajv": "^8.20.0",
+    "ajv-formats": "^3.0.1",
     "typescript": "^5.9.3"
   }
 }

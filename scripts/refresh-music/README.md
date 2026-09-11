@@ -11,7 +11,7 @@ npm run music:refresh
 The command is a thin coordinator over five stages:
 
 1. The Apple Replay acquisition adapter opens a headed Chromium session, waits for authorization, captures the Replay app's own request templates, and fetches every year exposed by its dropdown plus months 1–12.
-2. The snapshot store writes raw responses to a run-scoped directory outside the repository and records a non-secret manifest.
+2. The snapshot store writes raw responses to a run-scoped directory outside the repository and records a non-secret manifest. Present entries carry a safe `raw/` path plus a payload hash; absent entries (404s) are pathless with no hash. A run is promoted to completed only after its manifest passes the Python contract validator.
 3. The Python canonicalizer maps raw Apple resources to the stable `src/data/music.json` shape.
 4. The validator checks raw manifest and canonical-data invariants before publication.
 5. The site publisher atomically replaces `music.json`, runs Astro check/build, and restores the exact old bytes if either check fails. The repository publisher then commits only `src/data/music.json` and pushes `main`.
@@ -31,7 +31,7 @@ orchestrator.mjs  stage coordinator
 
 The browser profile lives in `scripts/refresh-music/.profile/` and remains ignored by Git. MusicKit tokens, cookies, and captured request headers stay in browser/process memory. They are never printed, placed in a manifest, written to the repository, or sent to a logging service.
 
-Raw listening snapshots live outside the repository under `${REPLAY_DIR:-/tmp/replay}/runs/`. Completed runs are ephemeral: the newest three are retained by default, older runs are removed only after a later run commits successfully. Interrupted runs stay in staging and never replace the last completed run.
+Raw listening snapshots live outside the repository under `${REPLAY_DIR:-/tmp/replay}/runs/`. Completed runs are ephemeral: the newest three are retained by default, older runs are removed only after a later run's manifest is validated and its commit succeeds. Interrupted runs stay in staging and never replace the last completed run.
 
 ## Options
 

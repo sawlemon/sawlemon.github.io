@@ -147,7 +147,9 @@ class ManifestReaderTest(unittest.TestCase):
                 "payloadSha256": hashlib.sha256(payload).hexdigest(),
             })
         entries.append({
-            "kind": "month", "id": "2024-03", "path": "raw/month-2024-03.json",
+            # Absent entries are pathless, exactly as snapshots/store.mjs
+            # recordAbsent() writes them.
+            "kind": "month", "id": "2024-03",
             "status": "absent", "httpStatus": 404, "observedAt": "2024-01-01T00:00:00Z",
         })
         manifest = {
@@ -162,6 +164,7 @@ class ManifestReaderTest(unittest.TestCase):
         }
         with open(os.path.join(run_dir, "manifest.json"), "w", encoding="utf-8") as f:
             json.dump(manifest, f)
+        self.manifest = manifest
         self.reader = ManifestReader(run_dir)
 
     def tearDown(self):
@@ -182,6 +185,16 @@ class ManifestReaderTest(unittest.TestCase):
         os.makedirs(bad)
         with open(os.path.join(bad, "manifest.json"), "w", encoding="utf-8") as f:
             json.dump({"nope": True}, f)
+        with self.assertRaises(RawInputError):
+            ManifestReader(bad)
+
+    def test_absent_entry_with_path_raises(self):
+        manifest = json.loads(json.dumps(self.manifest))
+        manifest["snapshots"][-1]["path"] = "raw/month-2024-03.json"
+        bad = os.path.join(self.tmp, "runs", "contradictory")
+        os.makedirs(bad)
+        with open(os.path.join(bad, "manifest.json"), "w", encoding="utf-8") as f:
+            json.dump(manifest, f)
         with self.assertRaises(RawInputError):
             ManifestReader(bad)
 

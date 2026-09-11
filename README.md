@@ -26,12 +26,15 @@ npm run dev
 
 Astro prints the local URL when the server starts.
 
-Before publishing a change, run both checks:
+Before publishing a change, run the Replay pipeline tests and both checks:
 
 ```sh
+npm run test:music
 npm run check
 npm run build
 ```
+
+`test:music` runs the Node and Python suites under `tests/music/`, including the parity corpus that keeps `contracts/raw-snapshot.schema.json` and the Python manifest validator in agreement.
 
 Preview the production build with:
 
@@ -46,6 +49,7 @@ npm run preview
 | `npm run dev` | Starts the Astro development server |
 | `npm run check` | Runs Astro and TypeScript diagnostics |
 | `npm run build` | Builds the static site into `dist/` |
+| `npm run test:music` | Runs the Replay pipeline Node and Python test suites, including the schema/validator parity corpus |
 | `npm run preview` | Serves the contents of `dist/` locally |
 | `npm run music:refresh -- --no-push` | Refreshes Replay data, validates, checks, and updates `music.json` without committing or pushing |
 | `npm run music:refresh -- --skip-fetch --no-push` | Rebuilds from existing Replay snapshots without opening Apple Music |
