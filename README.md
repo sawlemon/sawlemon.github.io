@@ -152,7 +152,7 @@ The About, Connect, and Hobbies copy currently lives in [`src/pages/index.astro`
 
 The Replay page reads [`src/data/music.json`](src/data/music.json). Do not hand-edit that file unless you are fixing generated data deliberately.
 
-The refresh tool is a staged pipeline: it captures available years and month summaries through a logged-in Chromium session, stores private raw responses in ephemeral run directories outside the repo, validates and canonicalizes them offline, atomically updates `music.json`, runs the site checks, and then commits/pushes only that file. Authentication tokens remain in browser memory. The pipeline never logs or writes them to disk.
+The refresh tool is a staged pipeline: it captures available years and month summaries through a logged-in Chromium session, stores private raw responses in ephemeral run directories outside the repo, validates and canonicalizes them offline, atomically updates `music.json`, runs the site checks, and then commits/pushes only that file. Authentication tokens remain in browser memory. The pipeline never logs or writes them to disk. A present but malformed month snapshot (for example an out-of-range month marker, or a stored payload with no data) fails the refresh with diagnostics naming the year and month, and the existing `music.json` is left untouched; only explicitly absent snapshots (404s) are omitted.
 
 Install the refresh tool once:
 

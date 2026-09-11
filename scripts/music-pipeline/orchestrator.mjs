@@ -16,7 +16,12 @@ const target = resolve(REPO_ROOT, TARGET_PATH);
 function run(command, args, opts = {}) {
   const result = spawnSync(command, args, { cwd: REPO_ROOT, encoding: 'utf8', ...opts });
   if (result.status !== 0) {
-    throw new Error(`${command} ${args.join(' ')} exited with ${result.status}`);
+    // Steps run with piped stdio unless opts request inherit, so their
+    // diagnostics would otherwise be swallowed. Include the captured output
+    // (canonicalizer diagnostics first, then the FAILED line) in the error.
+    const captured = `${result.stdout ?? ''}${result.stderr ?? ''}`.trim();
+    const detail = captured ? `\n${captured}` : '';
+    throw new Error(`${command} ${args.join(' ')} exited with ${result.status}${detail}`);
   }
   return result;
 }
