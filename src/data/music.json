@@ -1,5 +1,5 @@
 {
- "generated": "2026-08-28",
+ "generated": "2026-10-01",
  "years": {
   "2022": {
    "minutes": 25651,
@@ -904,9 +904,9 @@
     },
     {
      "title": "Devathaiya Kandein (From \"Kadhal Kondaen\")",
-     "artist": "Yuvan Shankar Raja, Harish Raghavendra & Na.Muthukumar",
-     "album": "Best of Yuvan Shankar Raja",
-     "artwork": "https://is1-ssl.mzstatic.com/image/thumb/Music221/v4/63/62/59/636259cd-0d8b-2da1-2546-3a1fcbffa8ba/26UMGIM66935.rgb.jpg/200x200bb.jpg",
+     "artist": "Yuvan Shankar Raja, Harish Raghavendra & Na. Muthukumar",
+     "album": "Hidden Gems - Yuvan Shankar Raja",
+     "artwork": "https://is1-ssl.mzstatic.com/image/thumb/Music221/v4/10/c0/53/10c053e8-009f-da9f-f334-ea36484b8a6a/26UM1IM10194.rgb.jpg/200x200bb.jpg",
      "plays": 28
     },
     {
@@ -938,10 +938,10 @@
      "plays": 23
     },
     {
-     "title": "Yarro",
-     "artist": "Yuvan Shankar Raja, S.P. Balasubrahmanyam, Vaalee & K.S. Chithra",
-     "album": "Evergreen Love",
-     "artwork": "https://is1-ssl.mzstatic.com/image/thumb/Music221/v4/e0/3a/11/e03a11fe-88db-e482-c6f3-c16f42bf5ae1/5034644610047.jpg/200x200bb.jpg",
+     "title": "Yaaro (From \"Chennai-600028\")",
+     "artist": "Yuvan Shankar Raja, S.P. Balasubrahmanyam, K.S. Chithra & Gangai Amaran",
+     "album": "Evergreen Romantic Hits Tamil",
+     "artwork": "https://is1-ssl.mzstatic.com/image/thumb/Music221/v4/43/37/82/4337825d-4442-0b6c-6513-c1bf34d0f6cc/26UM1IM10193.rgb.jpg/200x200bb.jpg",
      "plays": 22
     },
     {
@@ -987,17 +987,17 @@
      "plays": 18
     },
     {
-     "title": "Anbe Sivam",
-     "artist": "Vidyasagar, Kamal Haasan & Karthik",
-     "album": "Anbe Sivam (Original Motion Picture Soundtrack)",
-     "artwork": "https://is1-ssl.mzstatic.com/image/thumb/Music221/v4/45/a7/33/45a7331b-9a36-0f14-6818-2d93e599ceef/828970044325.jpg/200x200bb.jpg",
-     "plays": 17
-    },
-    {
      "title": "Olli Kuchi",
      "artist": "KK & Anuradha Sriram",
      "album": "Red (Original Motion Picture Soundtrack)",
      "artwork": "https://is1-ssl.mzstatic.com/image/thumb/Music125/v4/1c/57/12/1c5712d4-a7e8-7ec5-e6d2-2340d6800f58/886443305618.jpg/200x200bb.jpg",
+     "plays": 17
+    },
+    {
+     "title": "Anbe Sivam (From ''Anbe Sivam'')",
+     "artist": "Vidyasagar, Kamal Haasan & Karthik",
+     "album": "The Musical Waves of Vidyasagar",
+     "artwork": "https://is1-ssl.mzstatic.com/image/thumb/Music211/v4/78/fe/40/78fe4045-8266-9fb8-3a25-18052f629a05/196874733004.jpg/200x200bb.jpg",
      "plays": 17
     }
    ],
@@ -2305,7 +2305,7 @@
    }
   },
   "2026": {
-   "minutes": 8843,
+   "minutes": 10864,
    "months": [
     {
      "month": 1,
@@ -2499,8 +2499,29 @@
     {
      "month": 8,
      "label": "Aug",
-     "minutes": 0,
-     "artists": []
+     "minutes": 2021,
+     "artists": [
+      {
+       "name": "Anirudh Ravichander",
+       "minutes": 164
+      },
+      {
+       "name": "A.R. Rahman",
+       "minutes": 107
+      },
+      {
+       "name": "Yuvan Shankar Raja",
+       "minutes": 99
+      },
+      {
+       "name": "Santhosh Narayanan",
+       "minutes": 92
+      },
+      {
+       "name": "Harris Jayaraj",
+       "minutes": 90
+      }
+     ]
     },
     {
      "month": 9,
@@ -2533,35 +2554,35 @@
      "artist": "Nivas K Prasanna, Arivu, Vedan & Mari Selvaraj",
      "album": "Bison Kaalamaadan (Original Motion Picture Soundtrack)",
      "artwork": "https://is1-ssl.mzstatic.com/image/thumb/Music221/v4/42/cb/4f/42cb4f4c-d119-80b6-e5f8-8bb0a7af1b64/cover.jpg/200x200bb.jpg",
-     "plays": 56
+     "plays": 63
     },
     {
      "title": "Theekkoluthi",
      "artist": "Nivas K Prasanna & Mari Selvaraj",
      "album": "Bison Kaalamaadan (Original Motion Picture Soundtrack)",
      "artwork": "https://is1-ssl.mzstatic.com/image/thumb/Music221/v4/42/cb/4f/42cb4f4c-d119-80b6-e5f8-8bb0a7af1b64/cover.jpg/200x200bb.jpg",
-     "plays": 55
+     "plays": 56
     },
     {
      "title": "Kotha Raja",
      "artist": "Jakes Bejoy, Asal Kolaar, Dabzee, Roll Rida & Resmi Sateesh",
      "album": "King of Kotha (Tamil) [Original Motion Picture Soundtrack]",
      "artwork": "https://is1-ssl.mzstatic.com/image/thumb/Music116/v4/dd/45/4a/dd454a48-c7a9-6311-4d36-18e52880c453/196871413428.jpg/200x200bb.jpg",
-     "plays": 49
+     "plays": 50
     },
     {
      "title": "Thennaadu",
      "artist": "Nivas K Prasanna, Sathyan Mahalingam & Mari Selvaraj",
      "album": "Bison Kaalamaadan (Original Motion Picture Soundtrack)",
      "artwork": "https://is1-ssl.mzstatic.com/image/thumb/Music221/v4/42/cb/4f/42cb4f4c-d119-80b6-e5f8-8bb0a7af1b64/cover.jpg/200x200bb.jpg",
-     "plays": 48
+     "plays": 50
     },
     {
      "title": "Singari",
      "artist": "Sai Abhyankkar, Pradeep Ranganathan & Sai Smriti",
      "album": "Dude (Original Motion Picture Soundtrack)",
      "artwork": "https://is1-ssl.mzstatic.com/image/thumb/Music221/v4/76/57/c3/7657c308-e37a-1925-8be2-186a479f90e9/cover.jpg/200x200bb.jpg",
-     "plays": 43
+     "plays": 46
     },
     {
      "title": "Jinguchaa",
@@ -2571,17 +2592,45 @@
      "plays": 29
     },
     {
+     "title": "Vari Vari (Unna Kaadhaliche)",
+     "artist": "Dhee",
+     "album": "Vari Vari (Unna Kaadhaliche) - Single",
+     "artwork": "https://is1-ssl.mzstatic.com/image/thumb/Music211/v4/03/7b/60/037b60ae-5f5b-7141-ddd5-2f34ca1f00ee/26UMGIM36759.rgb.jpg/200x200bb.jpg",
+     "plays": 29
+    },
+    {
      "title": "The One (From \"Retro\")",
      "artist": "Sid Sriram, Santhosh Narayanan, SVDP & Vivek",
      "album": "The One (From \"Retro\") - Single",
      "artwork": "https://is1-ssl.mzstatic.com/image/thumb/Music221/v4/e3/53/ab/e353ab4a-53c7-35ca-70f1-35ce24d2f89e/8903431060945_cover.jpg/200x200bb.jpg",
-     "plays": 26
+     "plays": 28
     },
     {
      "title": "Aaya Sher (From \"The Paradise\")",
      "artist": "Jangi Reddy, Arjun Chandy, Anirudh Ravichander & Kasarla Shyam",
      "album": "Aaya Sher (From \"The Paradise\") - Single",
      "artwork": "https://is1-ssl.mzstatic.com/image/thumb/Music221/v4/16/f3/b5/16f3b5b2-c5f1-cfc1-bb63-1f716b7a0b9f/820200469984.jpg/200x200bb.jpg",
+     "plays": 27
+    },
+    {
+     "title": "Kannukkulle",
+     "artist": "Vishal Chandrashekar, Haricharan & Sinduri Vishal",
+     "album": "Sita Ramam (Tamil) (Extended Version) [Original Motion Picture Soundtrack]",
+     "artwork": "https://is1-ssl.mzstatic.com/image/thumb/Music122/v4/97/44/2c/97442cdd-e46f-e302-dfa8-4a90a1a8e5d7/196589460226.jpg/200x200bb.jpg",
+     "plays": 26
+    },
+    {
+     "title": "Kurumugil",
+     "artist": "Vishal Chandrashekar & Sai Vignesh",
+     "album": "Sita Ramam (Tamil) (Extended Version) [Original Motion Picture Soundtrack]",
+     "artwork": "https://is1-ssl.mzstatic.com/image/thumb/Music122/v4/97/44/2c/97442cdd-e46f-e302-dfa8-4a90a1a8e5d7/196589460226.jpg/200x200bb.jpg",
+     "plays": 25
+    },
+    {
+     "title": "God Mode (From \"Karuppu\")",
+     "artist": "Sai Abhyankkar, Gana Muthu & Vishnu Edavan",
+     "album": "God Mode (From \"Karuppu\") - Single",
+     "artwork": "https://is1-ssl.mzstatic.com/image/thumb/Music221/v4/ca/af/6b/caaf6be8-425c-acf5-b3e0-c4f097e2432d/cover.jpg/200x200bb.jpg",
      "plays": 25
     },
     {
@@ -2589,6 +2638,20 @@
      "artist": "ARJN, KDS, FIFTY4 & RONN",
      "album": "KALYANI - Single",
      "artwork": "https://is1-ssl.mzstatic.com/image/thumb/Music211/v4/fd/44/28/fd4428aa-47fa-1dc1-83d6-f416731bc327/25UM1IM78684.rgb.jpg/200x200bb.jpg",
+     "plays": 25
+    },
+    {
+     "title": "Chi Pae Thu",
+     "artist": "Santhosh Narayanan & Vaaheesan Rasaiya",
+     "album": "Chi Pae Thu - Single",
+     "artwork": "https://is1-ssl.mzstatic.com/image/thumb/Music221/v4/05/63/8f/05638f88-6976-1f64-c08d-3df10ddf042f/199538290769.jpg/200x200bb.jpg",
+     "plays": 25
+    },
+    {
+     "title": "Naan Erikarai(Ilayaraja)",
+     "artist": "Ilaiyaraaja",
+     "album": "Chinna Thayee (Original Motion Picture Soundtrack)",
+     "artwork": "https://is1-ssl.mzstatic.com/image/thumb/Music115/v4/02/7d/c2/027dc259-7dd5-8293-d402-586e9e5600c8/3614977928426.jpg/200x200bb.jpg",
      "plays": 24
     },
     {
@@ -2596,7 +2659,7 @@
      "artist": "Sai Abhyankkar, bebhumika, Deepthi Suresh & Paal Dabba",
      "album": "Dude (Original Motion Picture Soundtrack)",
      "artwork": "https://is1-ssl.mzstatic.com/image/thumb/Music221/v4/76/57/c3/7657c308-e37a-1925-8be2-186a479f90e9/cover.jpg/200x200bb.jpg",
-     "plays": 23
+     "plays": 24
     },
     {
      "title": "Hey Sita Hey Rama",
@@ -2604,48 +2667,6 @@
      "album": "Sita Ramam (Tamil) (Extended Version) [Original Motion Picture Soundtrack]",
      "artwork": "https://is1-ssl.mzstatic.com/image/thumb/Music122/v4/97/44/2c/97442cdd-e46f-e302-dfa8-4a90a1a8e5d7/196589460226.jpg/200x200bb.jpg",
      "plays": 22
-    },
-    {
-     "title": "Kurumugil",
-     "artist": "Vishal Chandrashekar & Sai Vignesh",
-     "album": "Sita Ramam (Tamil) (Extended Version) [Original Motion Picture Soundtrack]",
-     "artwork": "https://is1-ssl.mzstatic.com/image/thumb/Music122/v4/97/44/2c/97442cdd-e46f-e302-dfa8-4a90a1a8e5d7/196589460226.jpg/200x200bb.jpg",
-     "plays": 22
-    },
-    {
-     "title": "Kannukkulle",
-     "artist": "Vishal Chandrashekar, Haricharan & Sinduri Vishal",
-     "album": "Sita Ramam (Tamil) (Extended Version) [Original Motion Picture Soundtrack]",
-     "artwork": "https://is1-ssl.mzstatic.com/image/thumb/Music122/v4/97/44/2c/97442cdd-e46f-e302-dfa8-4a90a1a8e5d7/196589460226.jpg/200x200bb.jpg",
-     "plays": 21
-    },
-    {
-     "title": "Chi Pae Thu",
-     "artist": "Santhosh Narayanan & Vaaheesan Rasaiya",
-     "album": "Chi Pae Thu - Single",
-     "artwork": "https://is1-ssl.mzstatic.com/image/thumb/Music221/v4/05/63/8f/05638f88-6976-1f64-c08d-3df10ddf042f/199538290769.jpg/200x200bb.jpg",
-     "plays": 21
-    },
-    {
-     "title": "Vaadi Vaadi",
-     "artist": "Vijay & Devi Sri Prasad",
-     "album": "Sachien (Original Motion Picture Soundtrack) - EP",
-     "artwork": "https://is1-ssl.mzstatic.com/image/thumb/Music115/v4/7b/65/09/7b6509bd-5ebb-506d-4215-c063c3baebd4/1941570744040.jpg/200x200bb.jpg",
-     "plays": 20
-    },
-    {
-     "title": "Polladha Boomi",
-     "artist": "G.V. Prakash Kumar, Yugabharathi, Dhanush, TeeJay Arunasalam & Ken Karunaas",
-     "album": "Asuran (Original Motion Picture Soundtrack)",
-     "artwork": "https://is1-ssl.mzstatic.com/image/thumb/Music116/v4/6f/f2/06/6ff206eb-c064-6d6d-a678-35c0782f2138/8904337201999.jpg/200x200bb.jpg",
-     "plays": 20
-    },
-    {
-     "title": "Vari Vari (Unna Kaadhaliche)",
-     "artist": "Dhee",
-     "album": "Vari Vari (Unna Kaadhaliche) - Single",
-     "artwork": "https://is1-ssl.mzstatic.com/image/thumb/Music211/v4/03/7b/60/037b60ae-5f5b-7141-ddd5-2f34ca1f00ee/26UMGIM36759.rgb.jpg/200x200bb.jpg",
-     "plays": 20
     }
    ],
    "topArtists": [
@@ -2656,53 +2677,53 @@
     },
     {
      "name": "Nivas K Prasanna",
-     "minutes": 946,
-     "plays": 188
+     "minutes": 1007,
+     "plays": 201
     },
     {
      "name": "Mari Selvaraj",
-     "minutes": 809,
-     "plays": 164
+     "minutes": 856,
+     "plays": 174
     },
     {
      "name": "A.R. Rahman",
-     "minutes": 624,
-     "plays": 149
+     "minutes": 760,
+     "plays": 182
     },
     {
      "name": "Anirudh Ravichander",
-     "minutes": 528,
-     "plays": 159
+     "minutes": 657,
+     "plays": 200
     },
     {
      "name": "Santhosh Narayanan",
-     "minutes": 469,
-     "plays": 123
+     "minutes": 534,
+     "plays": 144
+    },
+    {
+     "name": "Ilaiyaraaja",
+     "minutes": 438,
+     "plays": 121
     },
     {
      "name": "Vedan",
-     "minutes": 362,
-     "plays": 89
+     "minutes": 404,
+     "plays": 98
     },
     {
      "name": "Sai Abhyankkar",
-     "minutes": 357,
-     "plays": 109
-    },
-    {
-     "name": "Arivu",
-     "minutes": 332,
-     "plays": 78
-    },
-    {
-     "name": "Asal Kolaar",
-     "minutes": 327,
-     "plays": 92
+     "minutes": 400,
+     "plays": 123
     },
     {
      "name": "Harris Jayaraj",
-     "minutes": 318,
-     "plays": 77
+     "minutes": 389,
+     "plays": 94
+    },
+    {
+     "name": "Asal Kolaar",
+     "minutes": 383,
+     "plays": 111
     }
    ],
    "topAlbums": [
@@ -2749,11 +2770,25 @@
      "plays": 13
     },
     {
+     "name": "Muthumani (From \"Dorothy\") - Single",
+     "artist": "Ilaiyaraaja & Shweta Mohan",
+     "artwork": "https://is1-ssl.mzstatic.com/image/thumb/Music211/v4/56/7f/c7/567fc7f1-ed85-c8f8-46b2-3a8bf61752f6/196874735886.jpg/200x200bb.jpg",
+     "minutes": 57,
+     "plays": 12
+    },
+    {
      "name": "Aaya Sher (From \"The Paradise\") - Single",
      "artist": "Jangi Reddy, Arjun Chandy, Anirudh Ravichander & Kasarla Shyam",
      "artwork": "https://is1-ssl.mzstatic.com/image/thumb/Music221/v4/16/f3/b5/16f3b5b2-c5f1-cfc1-bb63-1f716b7a0b9f/820200469984.jpg/200x200bb.jpg",
      "minutes": 41,
      "plays": 10
+    },
+    {
+     "name": "Aaro Nee Aaro (From \"Urumi\") - Single",
+     "artist": "Shweta Mohan, K. J. Yesudas, Deepak Dev & Kaithapram",
+     "artwork": "https://is1-ssl.mzstatic.com/image/thumb/Music221/v4/0f/88/ec/0f88ec1d-c1b6-c333-94b7-5f15ec0d091e/8905778118907.jpg/200x200bb.jpg",
+     "minutes": 37,
+     "plays": 6
     },
     {
      "name": "The Best of Fr. S. J. Berchmans, Vol. 1, 2, 3 & 4 (Jebathotta Jeyageethangal Songs)",
@@ -2768,20 +2803,6 @@
      "artwork": "https://is1-ssl.mzstatic.com/image/thumb/Music221/v4/e3/53/ab/e353ab4a-53c7-35ca-70f1-35ce24d2f89e/8903431060945_cover.jpg/200x200bb.jpg",
      "minutes": 35,
      "plays": 10
-    },
-    {
-     "name": "KALYANI - Single",
-     "artist": "ARJN, KDS, FIFTY4 & RONN",
-     "artwork": "https://is1-ssl.mzstatic.com/image/thumb/Music211/v4/fd/44/28/fd4428aa-47fa-1dc1-83d6-f416731bc327/25UM1IM78684.rgb.jpg/200x200bb.jpg",
-     "minutes": 35,
-     "plays": 9
-    },
-    {
-     "name": "Devarattam (Original Motion Picture Soundtrack)",
-     "artist": "Nivas K Prasanna",
-     "artwork": "https://is1-ssl.mzstatic.com/image/thumb/Music123/v4/14/a2/a0/14a2a0df-5bf5-8ed5-210c-5f026073f8e5/cover.jpg/200x200bb.jpg",
-     "minutes": 28,
-     "plays": 4
     }
    ],
    "playlist": {
