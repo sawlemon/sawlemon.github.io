@@ -16,8 +16,8 @@ export const site = {
   name: 'Solomon Raj A',
   handle: 'SAWLEMON',
   url: 'https://sawlemon.github.io',
-  description: 'Personal portfolio of Solomon Raj A, a Senior Consultant in Cybersecurity at Presidio.',
-  role: 'Senior Consultant, Cybersecurity at Presidio',
+  description: 'Personal portfolio of Solomon Raj A, a Principal Consultant in Cybersecurity at Presidio.',
+  role: 'Principal Consultant, Cybersecurity at Presidio',
   linkedin: 'https://www.linkedin.com/in/solomonraja/',
   github: 'https://github.com/sawlemon'
 } as const;
@@ -97,7 +97,8 @@ export const projects: Project[] = [
 ];
 
 export const experience = [
-  ['Senior Consultant', 'June 2025 to present'],
+  ['Principal Consultant', 'September 2026 to present'],
+  ['Senior Consultant', 'June 2025 to September 2026'],
   ['Senior Cloud Engineer', 'March 2024 to July 2025'],
   ['Cloud Engineer', 'July 2022 to April 2024'],
   ['Associate Cloud Engineer', 'June 2021 to July 2022'],
@@ -110,15 +111,10 @@ export const education = [
 ] as const;
 
 export const credentials = [
-  ['CrowdStrike Certified Falcon Administrator (CCFA)', ''],
   ['CrowdStrike Certified SIEM Engineer (CCSE)', 'Latest'],
-  ['NVIDIA Certified Associate: AI Infrastructure', ''],
+  ['NVIDIA Certified Associate: AI Infrastructure', 'March 2026'],
+  ['CrowdStrike Certified Falcon Administrator (CCFA)', 'December 2025'],
   ['Google Professional Cloud Architect', 'October 2024'],
-  ['Certified Kubernetes Administrator', 'September 2023'],
   ['Microsoft AZ-400', 'July 2021'],
-  ['Microsoft Azure Fundamentals', 'June 2021'],
-  ['HashiCorp Terraform Associate', ''],
-  ['AWS SysOps Administrator Associate', ''],
-  ['AWS Cloud Practitioner', ''],
-  ['Microsoft Azure Administrator Associate', '']
+  ['Microsoft Azure Fundamentals', 'June 2021']
 ] as const;
