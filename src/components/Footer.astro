@@ -2,10 +2,13 @@
 import { site } from '../data/site';
 ---
 
-<footer class="site-footer">
-  <div class="wrap footer-content">
-    <span class="wordmark">{site.handle}</span>
-    <span>© 2026 {site.name}. Built for GitHub Pages.</span>
-    <div><a href="#top" data-back-to-top>Back to top</a><a href={site.linkedin} target="_blank" rel="noreferrer">LinkedIn</a></div>
+<footer class="site-footer wrap">
+  <span class="footer-word" aria-hidden="true" data-fit>{site.handle}</span>
+  <div class="footer-row">
+    <span class="wordmark"><svg viewBox="0 0 200 200" aria-hidden="true"><use href="#lemon" /></svg>© 2026 {site.name}. Built for GitHub Pages.</span>
+    <nav aria-label="Footer">
+      <a href="#top">Back to top ↑</a>
+      <a href={site.linkedin} target="_blank" rel="noreferrer">LinkedIn ↗</a>
+    </nav>
   </div>
 </footer>

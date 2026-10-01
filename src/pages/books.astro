@@ -1,6 +1,5 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import { site } from '../data/site';
 import booksData from '../data/books.json';
@@ -18,64 +17,109 @@ type Book = {
   currentPosition: number | null;
 };
 
-const books = booksData.books as Book[];
-const reading = books.filter((book) => book.status === 'currently-reading');
-const datedReads = books.filter((book) => book.status === 'read' && book.readDate);
-const undatedReads = books.filter((book) => book.status === 'read' && !book.readDate);
-
 const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-const monthGroups = new Map<string, Book[]>();
-for (const book of datedReads) {
-  const key = book.readDate!.slice(0, 7);
-  if (!monthGroups.has(key)) monthGroups.set(key, []);
-  monthGroups.get(key)!.push(book);
-}
-const timeline = [...monthGroups.entries()].map(([key, items]) => {
-  const [year, month] = key.split('-');
-  return { label: `${MONTHS[Number(month) - 1]} ${year}`, items };
-});
+const PALETTE = ['#1f3a2e', '#7a2e22', '#22355a', '#5c4a1a', '#3e2d52', '#1e5450', '#8a4b1c', '#2a2a27', '#c9b53a', '#6b2f45', '#33463a'];
+const hash = (s: string) => [...s].reduce((a, c) => (a * 31 + c.charCodeAt(0)) >>> 0, 7);
+const colorFor = (s: string) => PALETTE[hash(s) % PALETTE.length];
+const fgFor = (c: string) => (c === '#c9b53a' ? '#0f0f0d' : '#f4f1e8');
+const clampNum = (v: number, a: number, b: number) => Math.min(b, Math.max(a, v));
 
-const bookMeta = (book: Book) =>
-  [book.pages ? `${book.pages} pages` : null, book.format].filter(Boolean).join(' · ');
+const books = (booksData.books as Book[]).filter((b) => b.status !== 'draft');
+const reading = books.filter((b) => b.status === 'currently-reading');
+const dated = books.filter((b) => b.status === 'read' && b.readDate);
+const undated = books.filter((b) => b.status === 'read' && !b.readDate);
+const groups = new Map<string, Book[]>();
+for (const b of dated) {
+  const k = b.readDate!.slice(0, 7);
+  if (!groups.has(k)) groups.set(k, []);
+  groups.get(k)!.push(b);
+}
+const meta = (b: Book) => [b.pages ? `${b.pages} pages` : null, b.format].filter(Boolean).join(' · ');
+const label = (k: string) => {
+  const [y, m] = k.split('-');
+  return `${MONTHS[Number(m) - 1]} ${y}`;
+};
+const countLabel = (n: number) => `${n} ${n === 1 ? 'book' : 'books'}`;
+const spineSize = (b: Book) => ({
+  h: b.pages ? clampNum(150 + b.pages * 0.22, 170, 262) : 210,
+  w: b.pages ? clampNum(30 + b.pages / 14, 36, 62) : 44
+});
 ---
 
-<BaseLayout title="Books | Solomon Raj A" description="A timeline of the books I have read and what I am reading now. No ratings, no reviews, just the record.">
-  <Header />
-  <main id="main" class="wrap books-page" data-page-motion>
-    <header class="hero page-reveal">
-      <p class="eyebrow books-label"><span class="hobbies-marker" aria-hidden="true"></span>[ 09 / READING ]</p>
+<BaseLayout title="Books | Solomon Raj A" description="A timeline of the books I have read and what I am reading now. No ratings, no reviews, just the record." page="books">
+  <main id="main">
+    <header class="page-hero wrap">
+      <p class="sec-num">Hobbies · Reading</p>
       <h1>Books</h1>
-      <p class="subpage-role">{site.role}</p>
-      <p class="books-lead">What I have read, newest first. No ratings, no reviews, just the record.</p>
+      <div class="page-hero-grid">
+        <div>
+          <p class="subpage-role mono">{site.role}</p>
+          <p class="lead">What I have read, newest first. No ratings, no reviews, just the record.</p>
+        </div>
+        <p class="stat-big"><strong data-count={dated.length + undated.length}>{dated.length + undated.length}</strong><span class="mono">books read</span></p>
+      </div>
     </header>
 
-    <section class="section page-reveal" aria-labelledby="reading-now-label">
-      <p class="section-label" id="reading-now-label">Currently reading</p>
-      <div class="reading-now-grid">
-        {reading.map((book, index) => (
-          <article class="book-card" style={`--i:${index}`}>
-            <h3>{book.title}</h3>
-            <p>{book.author}</p>
-            <span class="book-status">Now reading</span>
-          </article>
-        ))}
+    <section class="sub-sec wrap" aria-labelledby="now-label">
+      <div class="sub-head"><h2 id="now-label">Currently reading</h2></div>
+      <div class="desk">
+        {reading.map((b) => {
+          const c = colorFor(b.title);
+          return (
+            <article class="reading-now rv">
+              <div class="book3d" aria-hidden="true" style={`--c:${c};--fg:${fgFor(c)}`}>
+                <div class="front"><b>{b.title.split(':')[0]}</b><small>{b.author}</small></div>
+                <span class="pages"></span>
+              </div>
+              <div>
+                <h3>{b.title}</h3>
+                <p>{b.author}</p>
+                <span class="now-pill">Now reading</span>
+              </div>
+            </article>
+          );
+        })}
       </div>
     </section>
 
-    <section class="section page-reveal" aria-labelledby="timeline-label">
-      <p class="section-label" id="timeline-label">Timeline</p>
-      <div class="book-timeline">
-        {timeline.map((group) => (
-          <div class="book-month page-reveal">
-            <h2>{group.label}</h2>
+    <section class="sub-sec wrap books-shelf" aria-labelledby="timeline-label" data-books-view>
+      <div class="sub-head">
+        <h2 id="timeline-label">Timeline</h2>
+        <div class="view-toggle" role="group" aria-label="View">
+          <button type="button" aria-pressed="true" data-view="shelf">Shelf</button>
+          <button type="button" aria-pressed="false" data-view="list">List</button>
+        </div>
+      </div>
+      <ul class="bookcase">
+        {[...groups.entries()].flatMap(([k, items]) => {
+          const [y, m] = k.split('-');
+          const bookend = (
+            <li class="bk"><div class="bookend" role="presentation"><b>{MONTHS[Number(m) - 1]}</b><span>{y}</span><small>{countLabel(items.length)}</small></div></li>
+          );
+          const spines = items.map((b) => {
+            const c = colorFor(b.title);
+            const { h, w } = spineSize(b);
+            return (
+              <li class="bk">
+                <div class="spine" tabindex="0" style={`--c:${c};--fg:${fgFor(c)};--h:${Math.round(h)}px;--w:${Math.round(w)}px`}>
+                  <span class="spine-title" aria-hidden="true">{b.title.split(':')[0]}</span>
+                  <span class="spine-tip"><b>{b.title}</b><span>{b.author}</span><small>{label(k)}{meta(b) ? ` · ${meta(b)}` : ''}</small></span>
+                </div>
+              </li>
+            );
+          });
+          return [bookend, ...spines];
+        })}
+      </ul>
+      <div class="list-view">
+        {[...groups.entries()].map(([k, items]) => (
+          <div class="list-month">
+            <h3>{label(k)}<small>{countLabel(items.length)}</small></h3>
             <ul>
-              {group.items.map((book, index) => (
-                <li style={`--i:${index}`}>
-                  <div>
-                    <h3>{book.title}</h3>
-                    <p class="book-author">{book.author}</p>
-                  </div>
-                  {bookMeta(book) && <span class="book-meta">{bookMeta(book)}</span>}
+              {items.map((b) => (
+                <li>
+                  <div><h4>{b.title}</h4><p class="book-author">{b.author}</p></div>
+                  {meta(b) && <span class="book-meta">{meta(b)}</span>}
                 </li>
               ))}
             </ul>
@@ -84,24 +128,22 @@ const bookMeta = (book: Book) =>
       </div>
     </section>
 
-    {undatedReads.length > 0 && (
-      <section class="section page-reveal" aria-labelledby="undated-label">
-        <p class="section-label" id="undated-label">Read, date not recorded</p>
-        <ul class="book-undated">
-          {undatedReads.map((book, index) => (
-            <li style={`--i:${index}`}>
-              <div>
-                <h3>{book.title}</h3>
-                <p class="book-author">{book.author}</p>
-              </div>
-            </li>
-          ))}
-        </ul>
-      </section>
-    )}
+    <section class="sub-sec wrap" aria-labelledby="undated-label">
+      <div class="sub-head"><h2 id="undated-label">Read, date not recorded</h2></div>
+      <div class="pile">
+        {undated.map((b) => {
+          const c = colorFor(b.title);
+          return (
+            <div class="flat rv" style={`--c:${c};--fg:${fgFor(c)};--w:${62 + (hash(b.author) % 34)}%;--x:${((hash(b.title) % 7) - 3) * 6}px`}>
+              <b>{b.title}</b><span>{b.author}</span>
+            </div>
+          );
+        })}
+      </div>
+    </section>
   </main>
-  <Footer />
-  <script>
-    import '../scripts/page-motion.ts';
-  </script>
+
+  <div class="slab-end" slot="tail">
+    <Footer />
+  </div>
 </BaseLayout>
