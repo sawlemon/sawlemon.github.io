@@ -1,5 +1,5 @@
 {
- "generated": "2026-08-29",
+ "generated": "2026-10-01",
  "books": [
   {
    "id": "209349509",
@@ -26,16 +26,28 @@
    "currentPosition": 2
   },
   {
+   "id": "31170723",
+   "title": "Behave: The Biology of Humans at Our Best and Worst",
+   "author": "Robert M. Sapolsky",
+   "status": "currently-reading",
+   "readDate": null,
+   "dateAdded": "2025-11-09",
+   "publishedYear": 2017,
+   "pages": 790,
+   "format": "Hardcover",
+   "currentPosition": 3
+  },
+  {
    "id": "46223297",
    "title": "Permanent Record",
    "author": "Edward Snowden",
-   "status": "currently-reading",
-   "readDate": null,
+   "status": "read",
+   "readDate": "2026-09-08",
    "dateAdded": "2025-10-31",
    "publishedYear": 2019,
    "pages": 339,
    "format": "Hardcover",
-   "currentPosition": 3
+   "currentPosition": null
   },
   {
    "id": "18668059",
@@ -182,15 +194,15 @@
    "currentPosition": null
   },
   {
-   "id": "37757188",
-   "title": "பெண் ஏன் அடிமையானாள்: Pen Yen Adimaiyanaal (Politics Book 1) (Tamil Edition)",
+   "id": "5054659",
+   "title": "பெண் ஏன் அடிமையானாள்?",
    "author": "Periyar",
    "status": "read",
    "readDate": "2025-12-08",
-   "dateAdded": "2025-10-31",
-   "publishedYear": 2017,
-   "pages": 108,
-   "format": "Kindle Edition",
+   "dateAdded": "2026-09-30",
+   "publishedYear": 2013,
+   "pages": 96,
+   "format": "Paperback",
    "currentPosition": null
   },
   {
