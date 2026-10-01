@@ -110,11 +110,19 @@ export const education = [
   ['KGiSL Institute of Technology', 'Bachelor of Engineering, Computer Science and Engineering', '2017 to 2021']
 ] as const;
 
-export const credentials = [
-  ['CrowdStrike Certified SIEM Engineer (CCSE)', 'Latest'],
-  ['NVIDIA Certified Associate: AI Infrastructure', 'March 2026'],
-  ['CrowdStrike Certified Falcon Administrator (CCFA)', 'December 2025'],
-  ['Google Professional Cloud Architect', 'October 2024'],
-  ['Microsoft AZ-400', 'July 2021'],
-  ['Microsoft Azure Fundamentals', 'June 2021']
-] as const;
+export type Credential = {
+  name: string;
+  date?: string;
+  issuer: 'CrowdStrike' | 'NVIDIA' | 'Google Cloud' | 'Kubernetes' | 'Microsoft' | 'HashiCorp' | 'AWS';
+  latest?: boolean;
+};
+
+// Active certifications only, newest first. Issue months come from LinkedIn.
+export const credentials: Credential[] = [
+  { name: 'CrowdStrike Certified SIEM Engineer (CCSE)', date: 'June 2026', issuer: 'CrowdStrike', latest: true },
+  { name: 'NVIDIA Certified Associate: AI Infrastructure', date: 'March 2026', issuer: 'NVIDIA' },
+  { name: 'CrowdStrike Certified Falcon Administrator (CCFA)', date: 'December 2025', issuer: 'CrowdStrike' },
+  { name: 'Google Professional Cloud Architect', date: 'October 2024', issuer: 'Google Cloud' },
+  { name: 'Microsoft AZ-400', date: 'July 2021', issuer: 'Microsoft' },
+  { name: 'Microsoft Azure Fundamentals', date: 'June 2021', issuer: 'Microsoft' }
+];

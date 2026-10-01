@@ -1,7 +1,6 @@
 ---
 import { getCollection, render } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import Header from '../../components/Header.astro';
 import Footer from '../../components/Footer.astro';
 import { site } from '../../data/site';
 
@@ -14,4 +13,21 @@ const { post } = Astro.props;
 const { Content } = await render(post);
 ---
 
-<BaseLayout title={`${post.data.title} | ${site.name}`} description={post.data.description}><Header /><main id="main" class="wrap article"><a class="text-link" href="/blog/">← All writing</a><p class="eyebrow">{post.data.publishedDate.toLocaleDateString('en', { month: 'long', day: 'numeric', year: 'numeric' })}</p><h1>{post.data.title}</h1><p class="article-summary">{post.data.description}</p>{post.data.canonicalUrl && <p class="source-note">Originally published {post.data.originalPublication ? `on ${post.data.originalPublication}` : 'elsewhere'}. <a href={post.data.canonicalUrl}>View original ↗</a></p>}<article class="prose"><Content /></article></main><Footer /></BaseLayout>
+<BaseLayout title={`${post.data.title} | ${site.name}`} description={post.data.description} page="blog">
+  <main id="main">
+    <div class="article wrap">
+      <a class="back-link" href="/blog/">← All writing</a>
+      <p class="mono" style="margin-top:2rem;color:var(--muted)">{post.data.publishedDate.toLocaleDateString('en', { month: 'long', day: 'numeric', year: 'numeric' })}</p>
+      <h1>{post.data.title}</h1>
+      <p class="article-summary">{post.data.description}</p>
+      {post.data.canonicalUrl && (
+        <p class="source-note">Originally published {post.data.originalPublication ? `on ${post.data.originalPublication}` : 'elsewhere'}. <a href={post.data.canonicalUrl}>View original ↗</a></p>
+      )}
+      <article class="prose"><Content /></article>
+    </div>
+  </main>
+
+  <div class="slab-end" slot="tail">
+    <Footer />
+  </div>
+</BaseLayout>

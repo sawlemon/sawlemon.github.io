@@ -1,0 +1,52 @@
+---
+// Inline SVG sprite: the lemon-slice brand mark and issuer logos for the
+// credential seals. Logos come from src/data/brand-logos.json (Simple Icons
+// path data; CrowdStrike falcon cropped from CrowdStrike's official SVG).
+import brandLogos from '../data/brand-logos.json';
+
+type LogoFile = Record<string, [string, [string, string | null][], string]>;
+
+const slug = (name: string) => 'logo-' + name.toLowerCase().replace(/[^a-z0-9]/g, '');
+const logos = brandLogos as unknown as LogoFile;
+
+const lemonSymbol = (() => {
+  const pt = (r: number, deg: number): [number, number] => {
+    const a = ((deg - 90) * Math.PI) / 180;
+    return [100 + r * Math.cos(a), 100 + r * Math.sin(a)];
+  };
+  const segs: string[] = [];
+  for (let k = 0; k < 10; k++) {
+    const a0 = k * 36 + 12.5;
+    const a1 = (k + 1) * 36 - 3.5;
+    const [x0, y0] = pt(14, a0 + 9);
+    const [x1, y1] = pt(80, a0);
+    const [x2, y2] = pt(80, a1);
+    const [x3, y3] = pt(14, a1 - 9);
+    segs.push(`<path d="M${x0.toFixed(1)} ${y0.toFixed(1)}L${x1.toFixed(1)} ${y1.toFixed(1)}A80 80 0 0 1 ${x2.toFixed(1)} ${y2.toFixed(1)}L${x3.toFixed(1)} ${y3.toFixed(1)}Z"/>`);
+  }
+  const seeds: string[] = [];
+  for (const k of [1, 4, 7]) {
+    const a = k * 36 + 18;
+    const [x, y] = pt(44, a);
+    seeds.push(`<ellipse cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" rx="3.2" ry="7" transform="rotate(${a} ${x.toFixed(1)} ${y.toFixed(1)})"/>`);
+  }
+  return `<symbol id="lemon" viewBox="0 0 200 200"><circle cx="100" cy="100" r="99" style="fill:var(--lemon-deep)"/><circle cx="100" cy="100" r="91" style="fill:var(--pith)"/><g style="fill:var(--lemon);stroke:var(--lemon);stroke-width:4;stroke-linejoin:round">${segs.join('')}</g><g style="fill:var(--pith);opacity:.9">${seeds.join('')}</g><circle cx="100" cy="100" r="7" style="fill:var(--pith)"/></symbol>`;
+})();
+
+const logoSymbols = Object.entries(logos)
+  .map(([name, [viewBox, paths]]) => {
+    const body = paths
+      .map(([d, rule]) => `<path d="${d}"${rule ? ` fill-rule="${rule}"` : ''}/>`)
+      .join('');
+    return `<symbol id="${slug(name)}" viewBox="${viewBox}">${body}</symbol>`;
+  })
+  .join('');
+---
+
+<svg class="sprite" aria-hidden="true" focusable="false">
+  <defs set:html={lemonSymbol + logoSymbols} />
+  <defs>
+    <path id="ring" d="M50 50m-37 0a37 37 0 1 1 74 0a37 37 0 1 1-74 0" fill="none" />
+    <path id="ring-sticker" d="M50 50m-38 0a38 38 0 1 1 76 0a38 38 0 1 1-76 0" fill="none" />
+  </defs>
+</svg>

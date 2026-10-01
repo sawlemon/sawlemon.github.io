@@ -1,0 +1,30 @@
+---
+import { navSections } from '../data/nav';
+import { site } from '../data/site';
+
+interface Props {
+  page: 'home' | 'books' | 'music' | 'blog';
+}
+
+const { page } = Astro.props;
+const home = page === 'home';
+const href = (id: string) => (home ? `#${id}` : `/#${id}`);
+const current = home ? 'Solomon Raj' : page === 'blog' ? 'Writing' : page.charAt(0).toUpperCase() + page.slice(1);
+---
+
+<nav class:list={['dock', { show: !home }]} aria-label="Main navigation" data-dock data-current={home ? 'null' : page === 'blog' ? 'writing' : 'null'}>
+  <div class="dock-links">
+    <span class="dock-ind" aria-hidden="true"></span>
+    {navSections.map((s) => <a href={href(s.id)} data-spy={s.id}>{s.label}</a>)}
+  </div>
+  <button class="dock-index" type="button" data-index-open aria-expanded="false" aria-controls="index-overlay">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 8h16M4 16h16" /></svg>Index
+  </button>
+  <span class="dock-current" data-dock-current aria-hidden="true">{current}</span>
+</nav>
+<div class="index-overlay" id="index-overlay" data-index role="dialog" aria-modal="true" aria-label="Site index">
+  <button class="index-close" type="button" data-index-close>Close</button>
+  {navSections.map((s, i) => <a href={href(s.id)}><span>{String(i + 1).padStart(2, '0')}</span><b>{s.label}</b></a>)}
+  <a href="/blog/"><span>↗</span><b>All writing</b></a>
+  <a href={site.github} target="_blank" rel="noreferrer"><span>↗</span><b>View GitHub</b></a>
+</div>

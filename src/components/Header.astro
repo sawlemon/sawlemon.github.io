@@ -3,33 +3,14 @@ import { site } from '../data/site';
 ---
 
 <header class="site-header">
-  <nav class="nav wrap" aria-label="Main navigation">
-    <a class="wordmark" href="/">{site.handle}</a>
-    <div class="nav-links">
-      <a href="/#about">About</a>
-      <a href="/#interests">Interests</a>
-      <a href="/#projects">Projects</a>
-      <a href="/blog/">Writing</a>
-      <a href="/#experience">Experience</a>
-      <a href="/#connect">Connect</a>
-    </div>
-    <div class="nav-actions">
-      <button class="theme-toggle" type="button" data-theme-toggle aria-label="Toggle colour theme">
-        <span aria-hidden="true">◐</span><span class="sr-only">Toggle colour theme</span>
-      </button>
-      <a class="button button-secondary" href={site.github} target="_blank" rel="noreferrer">View GitHub <span aria-hidden="true">↗</span></a>
-      <details class="mobile-menu">
-        <summary>Menu</summary>
-        <div>
-          <a href="/#about">About</a>
-          <a href="/#interests">Interests</a>
-          <a href="/#projects">Projects</a>
-          <a href="/blog/">Writing</a>
-          <a href="/#experience">Experience</a>
-          <a href="/#connect">Connect</a>
-          <a href={site.github} target="_blank" rel="noreferrer">View GitHub ↗</a>
-        </div>
-      </details>
-    </div>
-  </nav>
+  <a class="pill wordmark" href="/" aria-label={`${site.handle}, home`}>
+    <svg viewBox="0 0 200 200" aria-hidden="true"><use href="#lemon" /></svg>{site.handle}
+  </a>
+  <div class="pill">
+    <button class="icon-btn" type="button" data-theme-toggle aria-label="Toggle colour theme">
+      <svg class="i-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5Z" /></svg>
+      <svg class="i-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><circle cx="12" cy="12" r="4.2" /><path d="M12 2.5v2.2M12 19.3v2.2M4.6 4.6l1.6 1.6M17.8 17.8l1.6 1.6M2.5 12h2.2M19.3 12h2.2M4.6 19.4l1.6-1.6M17.8 6.2l1.6-1.6" /></svg>
+    </button>
+    <a class="gh-link" href={site.github} target="_blank" rel="noreferrer">View GitHub <span aria-hidden="true">↗</span></a>
+  </div>
 </header>
