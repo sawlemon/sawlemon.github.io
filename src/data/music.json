@@ -1,5 +1,5 @@
 {
- "generated": "2026-10-01",
+ "generated": "2026-10-07",
  "years": {
   "2022": {
    "minutes": 25651,
@@ -2305,7 +2305,7 @@
    }
   },
   "2026": {
-   "minutes": 10864,
+   "minutes": 12429,
    "months": [
     {
      "month": 1,
@@ -2526,8 +2526,29 @@
     {
      "month": 9,
      "label": "Sep",
-     "minutes": 0,
-     "artists": []
+     "minutes": 1565,
+     "artists": [
+      {
+       "name": "Ilaiyaraaja",
+       "minutes": 141
+      },
+      {
+       "name": "Shweta Mohan",
+       "minutes": 106
+      },
+      {
+       "name": "A.R. Rahman",
+       "minutes": 106
+      },
+      {
+       "name": "Anirudh Ravichander",
+       "minutes": 69
+      },
+      {
+       "name": "Yuvan Shankar Raja",
+       "minutes": 61
+      }
+     ]
     },
     {
      "month": 10,
@@ -2603,7 +2624,7 @@
      "artist": "Sid Sriram, Santhosh Narayanan, SVDP & Vivek",
      "album": "The One (From \"Retro\") - Single",
      "artwork": "https://is1-ssl.mzstatic.com/image/thumb/Music221/v4/e3/53/ab/e353ab4a-53c7-35ca-70f1-35ce24d2f89e/8903431060945_cover.jpg/200x200bb.jpg",
-     "plays": 28
+     "plays": 29
     },
     {
      "title": "Aaya Sher (From \"The Paradise\")",
@@ -2687,13 +2708,13 @@
     },
     {
      "name": "A.R. Rahman",
-     "minutes": 760,
-     "plays": 182
+     "minutes": 781,
+     "plays": 186
     },
     {
      "name": "Anirudh Ravichander",
-     "minutes": 657,
-     "plays": 200
+     "minutes": 664,
+     "plays": 203
     },
     {
      "name": "Santhosh Narayanan",
@@ -2702,8 +2723,8 @@
     },
     {
      "name": "Ilaiyaraaja",
-     "minutes": 438,
-     "plays": 121
+     "minutes": 442,
+     "plays": 122
     },
     {
      "name": "Vedan",
@@ -2716,14 +2737,14 @@
      "plays": 123
     },
     {
+     "name": "Asal Kolaar",
+     "minutes": 391,
+     "plays": 113
+    },
+    {
      "name": "Harris Jayaraj",
      "minutes": 389,
      "plays": 94
-    },
-    {
-     "name": "Asal Kolaar",
-     "minutes": 383,
-     "plays": 111
     }
    ],
    "topAlbums": [
