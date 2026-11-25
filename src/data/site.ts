@@ -15,7 +15,7 @@ export type Project = {
 export const site = {
   name: 'Solomon Raj A',
   handle: 'SAWLEMON',
-  url: 'https://sawlemon.github.io',
+  url: 'https://sawlemon.fyi',
   description: 'Personal portfolio of Solomon Raj A, a Principal Consultant in Cybersecurity at Presidio.',
   role: 'Principal Consultant, Cybersecurity at Presidio',
   linkedin: 'https://www.linkedin.com/in/solomonraja/',
@@ -73,7 +73,7 @@ export const projects: Project[] = [
       width: 2880,
       height: 1620
     },
-    href: 'https://sawlemon.github.io/llm-reportcard/',
+    href: 'https://sawlemon.fyi/llm-reportcard/',
     sourceHref: 'https://github.com/sawlemon/llm-reportcard'
   },
   {

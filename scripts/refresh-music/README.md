@@ -1,6 +1,6 @@
 # Music Replay refresh
 
-One command regenerates the [music page](https://sawlemon.github.io/music/) from Apple Music Replay:
+One command regenerates the [music page](https://sawlemon.fyi/music/) from Apple Music Replay:
 
 ```sh
 npm run music:refresh
