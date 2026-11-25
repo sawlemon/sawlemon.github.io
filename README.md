@@ -1,6 +1,6 @@
 # sawlemon.github.io
 
-Source for [sawlemon.github.io](https://sawlemon.github.io), my personal portfolio.
+Source for [sawlemon.fyi](https://sawlemon.fyi), my personal portfolio. `sawlemon.github.io` redirects there.
 
 The site covers my work in cybersecurity, cloud engineering, and AI. It also hosts writing and an Apple Music Replay page with yearly stats, monthly listening totals, top artists, top songs, and playlist links.
 
@@ -211,4 +211,4 @@ A push to `main` starts [`.github/workflows/deploy.yml`](.github/workflows/deplo
 3. Runs `npm run build`.
 4. Uploads `dist/` and deploys it to GitHub Pages.
 
-The Astro site URL is set to `https://sawlemon.github.io` in [`astro.config.mjs`](astro.config.mjs). The sitemap integration uses that value when generating URLs.
+The Astro site URL is set to `https://sawlemon.fyi` in [`astro.config.mjs`](astro.config.mjs). The sitemap integration uses that value when generating URLs. The custom domain is set in the repo's Pages settings, not a `CNAME` file, because the site deploys through Actions. DNS lives in `sawlemon/homelab` (`dns/dnsconfig.js`).
